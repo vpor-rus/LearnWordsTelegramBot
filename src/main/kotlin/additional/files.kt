@@ -1,4 +1,4 @@
-package org.example.additional
+package additional
 
 import java.io.File
 
