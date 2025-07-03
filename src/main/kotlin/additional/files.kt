@@ -29,8 +29,9 @@ fun loadDictionary(): List<Word> {
     return dictionary
 }
 
-
 fun main() {
+    val dictionary = loadDictionary()
+
     val menuFile = File("menu.txt")
     menuFile.createNewFile()
 
@@ -56,5 +57,9 @@ fun main() {
             else -> println("Введите 0 или 1 или 2")
         }
         println()
+    }
+
+    for (word in dictionary) {
+        println(word)
     }
 }
