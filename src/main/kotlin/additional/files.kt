@@ -59,7 +59,4 @@ fun main() {
         println()
     }
 
-    for (word in dictionary) {
-        println(word)
-    }
 }
