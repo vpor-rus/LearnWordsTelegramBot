@@ -53,7 +53,13 @@ fun main() {
             }
 
             1 -> println("Выбран пункт \"учить слова\"")
-            2 -> println("Выбран пункт \"Статистика\"")
+            2 -> {
+            val totalCount = dictionary.size
+            val learnedCount = dictionary.filter { it.correctAnswersCount >= 3 }.size
+                val percentTeache = if (totalCount > 0) { (learnedCount * 100) / totalCount }
+                else 0
+                println("Выучено $learnedCount из $totalCount | $percentTeache%")
+            }
             else -> println("Введите 0 или 1 или 2")
         }
         println()
