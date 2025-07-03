@@ -3,12 +3,13 @@ import java.io.File
 
 
 data class Word(
-
+    val original: String,
+    val translate: String,
     val correctAnswersCount: Int = 0,
 )
 
 fun loadDictionary(): List<Word> {
-    val wordFile: File = File("word.txt")
+    val wordFile = File("word.txt")
     val lines = if (wordFile.exists()) {
         wordFile.readLines()
     } else {
