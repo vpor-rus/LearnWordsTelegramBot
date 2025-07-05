@@ -32,18 +32,12 @@ fun loadDictionary(): List<Word> {
 fun main() {
     val dictionary = loadDictionary()
 
-    val menuFile = File("menu.txt")
-    menuFile.createNewFile()
+
 
     while (true) {
-        menuFile.writeText("1 - Учить слова\n2 - Статистика\n0 - Выход")
-        println(
-            "Программа предназначена для изучения иностранных слов,\n" + "Выберите ваше действие (введите 0 или 1 или 2):"
-        )
-        val menu = menuFile.readLines()
-        for (point in menu) {
-            println(point)
-        }
+        println("Программа предназначена для изучения иностранных слов,\n" +
+                "Выберите ваше действие (введите 0 или 1 или 2):")
+        println("1 - Учить слова\n2 - Статистика\n0 - Выход")
 
         val choice = readLine()?.toInt()
         when (choice) {
