@@ -2,6 +2,7 @@ package additional
 
 import java.io.File
 
+
 data class Word(
     val original: String,
     val translate: String,
@@ -19,7 +20,7 @@ fun loadDictionary(): List<Word> {
     val dictionary = mutableListOf<Word>()
 
     for (line in lines) {
-        val line = line.split("|")
+        val line =  line.split("|")
         val original = line.getOrNull(0) ?: ""
         val translate = line.getOrNull(1) ?: ""
         val correctCount = line.getOrNull(2)?.toIntOrNull() ?: 0
@@ -30,7 +31,6 @@ fun loadDictionary(): List<Word> {
 }
 
 fun main() {
-    loadDictionary()
 
 
     while (true) {
@@ -46,10 +46,11 @@ fun main() {
             }
 
             1 -> println("Выбран пункт \"учить слова\"")
-            2 -> println("Выбран пункт \"Статистика\"")
+
             else -> println("Введите 0 или 1 или 2")
         }
         println()
     }
 
 }
+
