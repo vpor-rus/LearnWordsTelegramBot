@@ -19,7 +19,7 @@ fun loadDictionary(): List<Word> {
     val dictionary = mutableListOf<Word>()
 
     for (line in lines) {
-        val line = line.split("|")
+        val line =  line.split("|")
         val original = line.getOrNull(0) ?: ""
         val translate = line.getOrNull(1) ?: ""
         val correctCount = line.getOrNull(2)?.toIntOrNull() ?: 0
@@ -29,9 +29,11 @@ fun loadDictionary(): List<Word> {
     return dictionary
 }
 
-fun main() {
-    loadDictionary()
+const val CRITERION_OF_STUDY = 3
 
+fun main() {
+
+    val dictionary = loadDictionary()
 
     while (true) {
         println("Программа предназначена для изучения иностранных слов,\n" +
@@ -46,10 +48,20 @@ fun main() {
             }
 
             1 -> println("Выбран пункт \"учить слова\"")
-            2 -> println("Выбран пункт \"Статистика\"")
+            2 -> {
+                val totalCount = dictionary.size
+                val learnedCount = dictionary.filter { it.correctAnswersCount >= CRITERION_OF_STUDY }.size
+                val percentLearned = if (totalCount > 0 ) {
+                    (learnedCount * 100) /totalCount
+                } else 0
+
+                println(percentLearned)
+            }
+
             else -> println("Введите 0 или 1 или 2")
         }
         println()
     }
 
 }
+
