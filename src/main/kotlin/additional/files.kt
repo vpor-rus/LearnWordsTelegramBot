@@ -32,8 +32,6 @@ fun loadDictionary(): List<Word> {
 fun main() {
     val dictionary = loadDictionary()
 
-
-
     while (true) {
         println("Программа предназначена для изучения иностранных слов,\n" +
                 "Выберите ваше действие (введите 0 или 1 или 2):")
