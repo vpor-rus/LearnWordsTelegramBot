@@ -1,4 +1,5 @@
 package additional
+
 import java.io.File
 
 
@@ -30,7 +31,7 @@ fun loadDictionary(): List<Word> {
 }
 
 fun main() {
-    val dictionary = loadDictionary()
+
 
     while (true) {
         println("Программа предназначена для изучения иностранных слов,\n" +
@@ -46,13 +47,6 @@ fun main() {
 
             1 -> println("Выбран пункт \"учить слова\"")
 
-            2 -> {
-            val totalCount = dictionary.size
-            val learnedCount = dictionary.filter { it.correctAnswersCount >= CRITERION_OF_STUDY }.size
-                val percentTeache = if (totalCount > 0) { (learnedCount * 100) / totalCount }
-                else 0
-                println("Выучено $learnedCount из $totalCount | $percentTeache%")
-            }
             else -> println("Введите 0 или 1 или 2")
         }
         println()
@@ -60,4 +54,3 @@ fun main() {
 
 }
 
-const val CRITERION_OF_STUDY = 3
