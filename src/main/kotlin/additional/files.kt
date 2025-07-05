@@ -9,7 +9,7 @@ data class Word(
 )
 
 fun loadDictionary(): List<Word> {
-    val wordFile: File = File("word.txt")
+    val wordFile = File("word.txt")
     val lines = if (wordFile.exists()) {
         wordFile.readLines()
     } else {
@@ -19,7 +19,7 @@ fun loadDictionary(): List<Word> {
     val dictionary = mutableListOf<Word>()
 
     for (line in lines) {
-       val line =  line.split("|")
+        val line = line.split("|")
         val original = line.getOrNull(0) ?: ""
         val translate = line.getOrNull(1) ?: ""
         val correctCount = line.getOrNull(2)?.toIntOrNull() ?: 0
@@ -30,20 +30,13 @@ fun loadDictionary(): List<Word> {
 }
 
 fun main() {
-    val dictionary = loadDictionary()
+    loadDictionary()
 
-    val menuFile = File("menu.txt")
-    menuFile.createNewFile()
 
     while (true) {
-        menuFile.writeText("1 - Учить слова\n2 - Статистика\n0 - Выход")
-        println(
-            "Программа предназначена для изучения иностранных слов,\n" + "Выберите ваше действие (введите 0 или 1 или 2):"
-        )
-        val menu = menuFile.readLines()
-        for (point in menu) {
-            println(point)
-        }
+        println("Программа предназначена для изучения иностранных слов,\n" +
+                "Выберите ваше действие (введите 0 или 1 или 2):")
+        println("1 - Учить слова\n2 - Статистика\n0 - Выход")
 
         val choice = readLine()?.toInt()
         when (choice) {
