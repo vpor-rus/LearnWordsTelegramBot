@@ -1,6 +1,7 @@
 package additional
 
 import java.io.File
+import java.lang.module.FindException
 
 data class Word(
     val original: String,
@@ -47,7 +48,31 @@ fun main() {
                 break
             }
 
-            1 -> println("Выбран пункт \"учить слова\"")
+            1 -> {
+            val notLearnedList = dictionary.filter { it.correctAnswersCount < CRITERION_OF_STUDY }
+
+            if (notLearnedList.isEmpty()) {
+                println("Вы выучили все слова, поздравляем")
+                continue
+            }
+                val questionWord = notLearnedList.shuffled().take(4)
+                val  correctAnswer = questionWord.random()
+
+                val options = questionWord.map { it.translate }.shuffled()
+                println("Как переводится: ${correctAnswer.original} ?")
+                options.forEachIndexed { index, option -> println("${index + 1}. $option") }
+
+                println("Введите номер ответа: ")
+                val answer = readLine()?.toInt()
+
+                if (answer != null && answer in 1..options.size) {
+                    if (options[answer - 1] == correctAnswer.translate) {
+                        println("Правильно.\nОтвет: ${options[answer - 1]}")
+                    } else {println("Неверно.\nПравильный ответ: ${correctAnswer.translate}")}
+                } else {
+                    println("Некорректный ввод")
+                }
+            }
             2 -> {
                 val totalCount = dictionary.size
                 val learnedCount = dictionary.filter { it.correctAnswersCount >= CRITERION_OF_STUDY }.size
