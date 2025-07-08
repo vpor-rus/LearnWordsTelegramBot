@@ -1,31 +1,30 @@
 package additional
 
 import java.io.File
-import java.lang.module.FindException
 
 data class Word(
     val original: String,
     val translate: String,
-    val correctAnswersCount: Int = 0,
+    val correctAnswerCount: Int = 0,
 )
 
-fun loadDictionary(): List<Word> {
-    val wordFile = File("word.txt")
-    val lines = if (wordFile.exists()) {
-        wordFile.readLines()
-    } else {
-        emptyList()
-    }
+fun loadDictionary(): MutableList<Word> {
+
+    val fileWord = File("word.txt")
+    val lines = fileWord.readLines()
 
     val dictionary = mutableListOf<Word>()
 
     for (line in lines) {
-        val line =  line.split("|")
-        val original = line.getOrNull(0) ?: ""
-        val translate = line.getOrNull(1) ?: ""
-        val correctCount = line.getOrNull(2)?.toIntOrNull() ?: 0
+        val separateCell = line.split("|")
+        val original = separateCell.getOrNull(0) ?: ""
+        val translate = separateCell.getOrNull(1) ?: ""
+        val correctAnswerCount = separateCell.getOrNull(2)?.toIntOrNull() ?: 0
 
-        dictionary.add(Word(original, translate, correctCount))
+        val word = Word(
+            original = original, translate = translate, correctAnswerCount = correctAnswerCount
+        )
+        dictionary.add(word)
     }
     return dictionary
 }
@@ -36,25 +35,22 @@ fun main() {
 
     val dictionary = loadDictionary()
 
+    println("Программа предназначена для изучения иностранных слов\n")
+
     while (true) {
-        println("Программа предназначена для изучения иностранных слов,\n" +
-                "Выберите ваше действие (введите 0 или 1 или 2):")
-        println("1 - Учить слова\n2 - Статистика\n0 - Выход")
-
+        println(
+            "выберите ваше действие\n" + "1 - Учить слова\n2 - статистика\n0 - выход"
+        )
         val choice = readLine()?.toInt()
+
         when (choice) {
-            0 -> {
-                println("Выбран пункт\"выход\"")
-                break
-            }
-
             1 -> {
-            val notLearnedList = dictionary.filter { it.correctAnswersCount < CRITERION_OF_STUDY }
+                val notLearnedList = dictionary.filter { it.correctAnswerCount < CRITERION_OF_STUDY }
 
-            if (notLearnedList.isEmpty()) {
-                println("Вы выучили все слова, поздравляем")
-                continue
-            }
+                if (notLearnedList.isEmpty()) {
+                    println("Вы выучили все слова, поздравляем")
+                    continue
+                }
                 val questionWord = notLearnedList.shuffled().take(4)
                 val  correctAnswer = questionWord.random()
 
@@ -73,20 +69,23 @@ fun main() {
                     println("Некорректный ввод")
                 }
             }
+            }
             2 -> {
                 val totalCount = dictionary.size
-                val learnedCount = dictionary.filter { it.correctAnswersCount >= CRITERION_OF_STUDY }.size
-                val percentLearned = if (totalCount > 0 ) {
-                    (learnedCount * 100) /totalCount
+                val learnedCount = dictionary.filter { it.correctAnswerCount >= CRITERION_OF_STUDY }.size
+                val percentCount = if (totalCount != 0) {
+                    (learnedCount * 100) / totalCount
                 } else 0
 
-                println(percentLearned)
+                println("результат изучения $percentCount")
             }
 
-            else -> println("Введите 0 или 1 или 2")
+            0 -> {
+                println("выбрал выход")
+                break
+            }
+
+            else -> println("некорректный ввод, выберите вариант 0 или 1 или 2")
         }
-        println()
     }
-
 }
-
