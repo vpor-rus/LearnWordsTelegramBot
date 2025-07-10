@@ -72,6 +72,7 @@ fun main() {
                             if ((inputAnswer != null) && (inputAnswer in 1..options.size)) {
                                 if (inputAnswer == correctAnswerID) {
                                     println("Правильно. Ответ \"${options[inputAnswer - 1]}\"")
+                                    println()
                                     val indexInDict =
                                         dictionary.indexOfFirst { it.original == correctAnswerWord.original }
                                     if (indexInDict != -1) {
@@ -80,6 +81,7 @@ fun main() {
                                     }
                                 } else {
                                     println("Неправильно. Ответ \"${correctAnswerWord.translate}\"")
+                                    println()
                                 }
                             } else if (inputAnswer == 0) {
                                 println("Возврат в меню.")
