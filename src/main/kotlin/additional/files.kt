@@ -31,6 +31,8 @@ fun loadDictionary(): MutableList<Word> {
 
 const val CRITERION_OF_STUDY = 3
 
+const val NUMBER_VARIANTS_IN_ANSWERS = 4
+
 fun main() {
 
     val dictionary = loadDictionary()
@@ -46,13 +48,21 @@ fun main() {
         when (choice) {
             1 -> {
                 val notLearnedList = dictionary.filter { it.correctAnswerCount < CRITERION_OF_STUDY }
-
+                val learnedList = dictionary.filter { it.correctAnswerCount >= CRITERION_OF_STUDY }
                 if (notLearnedList.isEmpty()) {
                     println("Вы выучили все слова, поздравляем")
                     continue
                 }
-                val questionWord = notLearnedList.shuffled().take(4)
-                val  correctAnswer = questionWord.random()
+
+                val needToAddInVariantsAnswer = NUMBER_VARIANTS_IN_ANSWERS - notLearnedList.size
+
+                val questionWord = if (needToAddInVariantsAnswer > 0) {
+                    (notLearnedList + learnedList.shuffled().take(needToAddInVariantsAnswer).shuffled())
+                } else {
+                    notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS)
+                }
+
+                val correctAnswer = notLearnedList.random()
 
                 val options = questionWord.map { it.translate }.shuffled()
                 println("Как переводится: ${correctAnswer.original} ?")
@@ -64,28 +74,29 @@ fun main() {
                 if (answer != null && answer in 1..options.size) {
                     if (options[answer - 1] == correctAnswer.translate) {
                         println("Правильно.\nОтвет: ${options[answer - 1]}")
-                    } else {println("Неверно.\nПравильный ответ: ${correctAnswer.translate}")}
+                    } else {
+                        println("Неверно.\nПравильный ответ: ${correctAnswer.translate}")
+                    }
                 } else {
                     println("Некорректный ввод")
                 }
             }
-            }
-            2 -> {
-                val totalCount = dictionary.size
-                val learnedCount = dictionary.filter { it.correctAnswerCount >= CRITERION_OF_STUDY }.size
-                val percentCount = if (totalCount != 0) {
-                    (learnedCount * 100) / totalCount
-                } else 0
-
-                println("результат изучения $percentCount")
-            }
-
-            0 -> {
-                println("выбрал выход")
-                break
-            }
-
-            else -> println("некорректный ввод, выберите вариант 0 или 1 или 2")
         }
+        2 -> {
+            val totalCount = dictionary.size
+            val learnedCount = dictionary.filter { it.correctAnswerCount >= CRITERION_OF_STUDY }.size
+            val percentCount = if (totalCount != 0) {
+                (learnedCount * 100) / totalCount
+            } else 0
+
+            println("результат изучения $percentCount")
+        }
+
+        0 -> {
+            println("выбрал выход")
+            break
+        }
+
+        else -> println("некорректный ввод, выберите вариант 0 или 1 или 2")
     }
 }
