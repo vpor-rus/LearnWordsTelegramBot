@@ -57,6 +57,7 @@ fun main() {
                     val listQuestionWord = notLearnedList.shuffled().take(4)
                     val correctAnswerWord = listQuestionWord.random()
                     val options = listQuestionWord.map { it.translate }.shuffled()
+
                     val correctAnswerID = options.indexOf(correctAnswerWord.translate) + 1
 
                     println("Как переводится ${correctAnswerWord.original}: ")
@@ -67,8 +68,13 @@ fun main() {
                     val inputAnswer = readLine()?.toInt()
 
                     if ((inputAnswer != null) && (inputAnswer in 1..options.size)) {
-                        if (options[inputAnswer - 1] == correctAnswerWord.translate) {
+                        if (inputAnswer == correctAnswerID) {
                             println("Правильно. Ответ ${options[inputAnswer - 1]}")
+                            val indexInDict = dictionary.indexOfFirst { it.original == correctAnswerWord.original }
+                            if (indexInDict != -1) {
+                                dictionary[indexInDict].answerCount++
+                                saveDictionary(dictionary)
+                            }
                         } else {
                             println("Неправильно. Ответ ${correctAnswerWord.translate}")
                         }
@@ -84,7 +90,7 @@ fun main() {
 
             2 -> {
                 val totalCount = dictionary.size
-                val learnedCount = dictionary.filter { it.answerCount > CRITERION_OF_STUDY }.size
+                val learnedCount = dictionary.count { it.answerCount >= CRITERION_OF_STUDY }
                 val percentLearned = if (totalCount > 0) {
                     (learnedCount * 100) / totalCount
                 } else 0
