@@ -55,36 +55,38 @@ fun main() {
                     continue
                 } else {
                     while (true) {
-                    val listQuestionWord = notLearnedList.shuffled().take(4)
-                    val correctAnswerWord = listQuestionWord.random()
-                    val options = listQuestionWord.map { it.translate }.shuffled()
+                        val listQuestionWord = notLearnedList.shuffled().take(4)
+                        val correctAnswerWord = listQuestionWord.random()
+                        val options = listQuestionWord.map { it.translate }.shuffled()
 
-                    val correctAnswerID = options.indexOf(correctAnswerWord.translate) + 1
+                        val correctAnswerID = options.indexOf(correctAnswerWord.translate) + 1
 
-                    println("Как переводится ${correctAnswerWord.original}: ")
-                    options.forEachIndexed { index, option -> println("${index + 1} - $option") }
-                    println("0 - меню")
-                    while (true) {
-                    println("Введите номер  ответа: ")
-                    val inputAnswer = readLine()?.toInt()
+                        println("Как переводится ${correctAnswerWord.original}: ")
+                        options.forEachIndexed { index, option -> println("${index + 1} - $option") }
+                        println()
+                        println("0 - меню")
 
-                    if ((inputAnswer != null) && (inputAnswer in 1..options.size)) {
-                        if (inputAnswer == correctAnswerID) {
-                            println("Правильно. Ответ ${options[inputAnswer - 1]}")
-                            val indexInDict = dictionary.indexOfFirst { it.original == correctAnswerWord.original }
-                            if (indexInDict != -1) {
-                                dictionary[indexInDict].answerCount++
-                                saveDictionary(dictionary)
-                            }
-                        } else {
-                            println("Неправильно. Ответ ${correctAnswerWord.translate}")
-                        }
-                    } else if(inputAnswer == 0) {
-                        println("Возврат в меню.")
-                        break
-                    }
-                    else println("некорректный ввод")
-                        continue
+                            println("Введите номер  ответа: ")
+                            val inputAnswer = readLine()?.toInt()
+
+                            if ((inputAnswer != null) && (inputAnswer in 1..options.size)) {
+                                if (inputAnswer == correctAnswerID) {
+                                    println("Правильно. Ответ \"${options[inputAnswer - 1]}\"")
+                                    val indexInDict =
+                                        dictionary.indexOfFirst { it.original == correctAnswerWord.original }
+                                    if (indexInDict != -1) {
+                                        dictionary[indexInDict].answerCount++
+                                        saveDictionary(dictionary)
+                                    }
+                                } else {
+                                    println("Неправильно. Ответ \"${correctAnswerWord.translate}\"")
+                                }
+                            } else if (inputAnswer == 0) {
+                                println("Возврат в меню.")
+                                break
+                            } else println("некорректный ввод")
+                            continue
+
                     }
                 }
             }
