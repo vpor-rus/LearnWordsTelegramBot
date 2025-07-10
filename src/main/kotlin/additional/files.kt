@@ -54,6 +54,7 @@ fun main() {
                     println("Выучены все слова")
                     continue
                 } else {
+                    while (true) {
                     val listQuestionWord = notLearnedList.shuffled().take(4)
                     val correctAnswerWord = listQuestionWord.random()
                     val options = listQuestionWord.map { it.translate }.shuffled()
