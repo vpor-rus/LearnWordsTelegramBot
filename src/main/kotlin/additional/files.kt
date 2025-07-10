@@ -1,67 +1,102 @@
 package additional
 
 import java.io.File
+import java.util.Dictionary
 
 data class Word(
     val original: String,
     val translate: String,
-    val correctAnswersCount: Int = 0,
+    var answerCount: Int = 0,
 )
 
-fun loadDictionary(): List<Word> {
-    val wordFile = File("word.txt")
-    val lines = if (wordFile.exists()) {
-        wordFile.readLines()
-    } else {
-        emptyList()
-    }
+fun loadWordFromFile(): MutableList<Word> {
+    val fileWord = File("word.txt")
+    val linesWord = fileWord.readLines()
 
     val dictionary = mutableListOf<Word>()
 
-    for (line in lines) {
-        val line =  line.split("|")
-        val original = line.getOrNull(0) ?: ""
-        val translate = line.getOrNull(1) ?: ""
-        val correctCount = line.getOrNull(2)?.toIntOrNull() ?: 0
+    for (line in linesWord) {
+        val separateWord = line.split("|")
+        val original = separateWord.getOrNull(0) ?: ""
+        val translate = separateWord.getOrNull(1) ?: ""
+        val correctAnswerCount = separateWord.getOrNull(2)?.toIntOrNull() ?: 0
 
-        dictionary.add(Word(original, translate, correctCount))
+        val word = Word(
+            original = original, translate = translate, answerCount = correctAnswerCount
+        )
+        dictionary.add(word)
     }
     return dictionary
+}
+
+fun saveDictionary(dictionary: List<Word>) {
+    val fileWord = File("word.txt")
+    val lines = dictionary.map { "${it.original}|${it.translate}|${it.answerCount}" }
+    fileWord.writeText(lines.joinToString("\n"))
 }
 
 const val CRITERION_OF_STUDY = 3
 
 fun main() {
 
-    val dictionary = loadDictionary()
+    println("Программа предназначена для изучения иностранных слов")
 
     while (true) {
-        println("Программа предназначена для изучения иностранных слов,\n" +
-                "Выберите ваше действие (введите 0 или 1 или 2):")
-        println("1 - Учить слова\n2 - Статистика\n0 - Выход")
+        val dictionary = loadWordFromFile()
 
+        println("Выберите вариант действия: \n1 - изучение слов\n2 - статистика\n0 - выход")
         val choice = readLine()?.toInt()
         when (choice) {
+            1 -> {
+                val notLearnedList = dictionary.filter { it.answerCount < CRITERION_OF_STUDY }
+
+                if (notLearnedList.isEmpty()) {
+                    println("Выучены все слова")
+                    continue
+                } else {
+                    val listQuestionWord = notLearnedList.shuffled().take(4)
+                    val correctAnswerWord = listQuestionWord.random()
+                    val options = listQuestionWord.map { it.translate }.shuffled()
+                    val correctAnswerID = options.indexOf(correctAnswerWord.translate) + 1
+
+                    println("Как переводится ${correctAnswerWord.original}: ")
+                    options.forEachIndexed { index, option -> println("${index + 1} - $option") }
+                    println("0 - меню")
+                    while (true) {
+                    println("Введите номер  ответа: ")
+                    val inputAnswer = readLine()?.toInt()
+
+                    if ((inputAnswer != null) && (inputAnswer in 1..options.size)) {
+                        if (options[inputAnswer - 1] == correctAnswerWord.translate) {
+                            println("Правильно. Ответ ${options[inputAnswer - 1]}")
+                        } else {
+                            println("Неправильно. Ответ ${correctAnswerWord.translate}")
+                        }
+                    } else if(inputAnswer == 0) {
+                        println("Возврат в меню.")
+                        break
+                    }
+                    else println("некорректный ввод")
+                        continue
+                    }
+                }
+            }
+
+            2 -> {
+                val totalCount = dictionary.size
+                val learnedCount = dictionary.filter { it.answerCount > CRITERION_OF_STUDY }.size
+                val percentLearned = if (totalCount > 0) {
+                    (learnedCount * 100) / totalCount
+                } else 0
+                println("Из $totalCount слов, выучено $learnedCount слов($percentLearned%)")
+            }
+
             0 -> {
-                println("Выбран пункт\"выход\"")
+                println("выбор выход")
                 break
             }
 
-            1 -> println("Выбран пункт \"учить слова\"")
-            2 -> {
-                val totalCount = dictionary.size
-                val learnedCount = dictionary.filter { it.correctAnswersCount >= CRITERION_OF_STUDY }.size
-                val percentLearned = if (totalCount > 0 ) {
-                    (learnedCount * 100) /totalCount
-                } else 0
-
-                println(percentLearned)
-            }
-
-            else -> println("Введите 0 или 1 или 2")
+            else -> println("некорректный ввод, выберите вариант 1 или 2 или 0")
         }
-        println()
     }
-
 }
-
