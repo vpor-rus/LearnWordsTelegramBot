@@ -31,6 +31,9 @@ fun loadDictionary(): MutableList<Word> {
 
 fun saveDictionary(dictionary: List<Word>) {
 
+    val fileWord = File("word.txt")
+    val lines = dictionary.map { "${it.original}|${it.translate}|${it.correctAnswerCount}" }
+    fileWord.writeText(lines.joinToString("\n"))
 }
 
 const val CRITERION_OF_STUDY = 3
@@ -86,11 +89,14 @@ fun main() {
                             val indexInDict = dictionary.indexOfFirst { it.original == correctAnswer.original }
                             if (indexInDict != -1) {
                                 dictionary[indexInDict].correctAnswerCount++
-                                sa
+                                saveDictionary(dictionary)
                             }
                         } else {
                             println("Неверно.\nПравильный ответ: ${correctAnswer.translate}")
                         }
+                    } else if(answer == 0) {
+                        println("выход в меню")
+                        break
                     } else {
                         println("Некорректный ввод")
                     }
@@ -99,7 +105,7 @@ fun main() {
 
             2 -> {
                 val totalCount = dictionary.size
-                val learnedCount = dictionary.filter { it.correctAnswerCount >= CRITERION_OF_STUDY }.size
+                val learnedCount = dictionary.count { it.correctAnswerCount >= CRITERION_OF_STUDY }
                 val percentCount = if (totalCount != 0) {
                     (learnedCount * 100) / totalCount
                 } else 0
