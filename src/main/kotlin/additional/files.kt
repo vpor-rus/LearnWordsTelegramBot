@@ -60,7 +60,6 @@ fun main() {
                     println("Вы выучили все слова, поздравляем")
                     continue
                 }
-
                 while (true) {
                     val needToAddInVariantsAnswer = NUMBER_VARIANTS_IN_ANSWERS - notLearnedList.size
                     val learnedList = dictionary.filter { it.correctAnswerCount >= CRITERION_OF_STUDY }
@@ -100,27 +99,29 @@ fun main() {
                     } else {
                         println("Некорректный ввод")
                     }
+
                 }
             }
 
             2 -> {
                 val totalCount = dictionary.size
+
                 val learnedCount = dictionary.count { it.correctAnswerCount >= CRITERION_OF_STUDY }
+
                 val percentCount = if (totalCount != 0) {
                     (learnedCount * 100) / totalCount
                 } else 0
 
                 println("результат изучения $percentCount")
+
             }
 
             0 -> {
                 println("выбрал выход")
                 break
             }
-
             else -> println("некорректный ввод, выберите вариант 0 или 1 или 2")
 
         }
     }
 }
-
