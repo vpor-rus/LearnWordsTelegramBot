@@ -5,7 +5,7 @@ import java.io.File
 data class Word(
     val original: String,
     val translate: String,
-    val correctAnswerCount: Int = 0,
+    var correctAnswerCount: Int = 0,
 )
 
 fun loadDictionary(): MutableList<Word> {
@@ -27,6 +27,10 @@ fun loadDictionary(): MutableList<Word> {
         dictionary.add(word)
     }
     return dictionary
+}
+
+fun saveDictionary(dictionary: List<Word>) {
+
 }
 
 const val CRITERION_OF_STUDY = 3
@@ -55,26 +59,35 @@ fun main() {
                 }
 
                 while (true) {
-                    val needToAddInVariantsAnswer = NUMBER_VARIANTS_IN_ANSWERS – notLearnedList.size
+                    val needToAddInVariantsAnswer = NUMBER_VARIANTS_IN_ANSWERS - notLearnedList.size
                     val learnedList = dictionary.filter { it.correctAnswerCount >= CRITERION_OF_STUDY }
+
+
                     val questionWord = if (needToAddInVariantsAnswer > 0) {
                         (notLearnedList + learnedList.shuffled().take(needToAddInVariantsAnswer).shuffled())
                     } else {
                         notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS)
                     }
-
                     val correctAnswer = notLearnedList.random()
-
                     val options = questionWord.map { it.translate }.shuffled()
+                    val correctAnswerID = options.indexOf(correctAnswer.translate) + 1
+
                     println("Как переводится: ${correctAnswer.original} ?")
                     options.forEachIndexed { index, option -> println("${index + 1}. $option") }
+                    println("\n0 - меню\n")
 
                     println("Введите номер ответа: ")
                     val answer = readLine()?.toInt()
 
                     if (answer != null && answer in 1..options.size) {
-                        if (options[answer - 1] == correctAnswer.translate) {
+                        if (answer == correctAnswerID) {
                             println("Правильно.\nОтвет: ${options[answer - 1]}")
+
+                            val indexInDict = dictionary.indexOfFirst { it.original == correctAnswer.original }
+                            if (indexInDict != -1) {
+                                dictionary[indexInDict].correctAnswerCount++
+                                sa
+                            }
                         } else {
                             println("Неверно.\nПравильный ответ: ${correctAnswer.translate}")
                         }
