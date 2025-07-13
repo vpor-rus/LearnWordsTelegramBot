@@ -71,7 +71,7 @@ fun main() {
                     } else {
                         notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS)
                     }
-                    val correctAnswer = notLearnedList.random()
+                    val correctAnswer = questionWord.random()
                     val options = questionWord.map { it.translate }.shuffled()
                     val correctAnswerID = options.indexOf(correctAnswer.translate) + 1
 
