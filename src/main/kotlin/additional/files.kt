@@ -45,6 +45,7 @@ fun main() {
         )
         val choice = readLine()?.toInt()
 
+
         when (choice) {
             1 -> {
                 val notLearnedList = dictionary.filter { it.correctAnswerCount < CRITERION_OF_STUDY }
