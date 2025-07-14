@@ -1,5 +1,7 @@
 import java.io.File
-
+/**
+ * тайминг 07-00
+ * **/
 data class Word(
     val original: String,
     val translate: String,
@@ -61,7 +63,6 @@ fun main() {
 
             2 -> {
                 val statistics = trainer.getStatistics()
-
                 println("результат изучения:\nвыучено ${statistics.learned}/${statistics.total}, ${statistics.percent}%")
             }
 
