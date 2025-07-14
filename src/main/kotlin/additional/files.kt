@@ -45,7 +45,6 @@ fun main() {
         )
         val choice = readLine()?.toInt()
 
-
         when (choice) {
             1 -> {
                 val notLearnedList = dictionary.filter { it.correctAnswerCount < CRITERION_OF_STUDY }
@@ -90,7 +89,7 @@ fun main() {
                     (learnedCount * 100) / totalCount
                 } else 0
 
-                println("результат изучения $percentCount")
+                println("результат изучения:\nвыучено $learnedCount/$totalCount, $percentCount%")
             }
 
             0 -> {
