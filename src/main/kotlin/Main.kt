@@ -1,5 +1,15 @@
 import java.io.File
 
+data class Word(
+    val original: String,
+    val translate: String,
+    val correctAnswerCount: Int = 0,
+)
+
+const val CRITERION_OF_STUDY = 3
+
+const val NUMBER_VARIANTS_IN_ANSWERS = 4
+
 fun main() {
 
     val trainer = LearnWordsTrainer()
@@ -66,12 +76,3 @@ fun main() {
     }
 }
 
-data class Word(
-    val original: String,
-    val translate: String,
-    val correctAnswerCount: Int = 0,
-)
-
-const val CRITERION_OF_STUDY = 3
-
-const val NUMBER_VARIANTS_IN_ANSWERS = 4
