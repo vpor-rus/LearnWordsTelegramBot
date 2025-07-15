@@ -1,4 +1,3 @@
-
 data class Word(
     val original: String,
     val translate: String,
@@ -27,35 +26,23 @@ fun main() {
 
                     val question = trainer.getNextQuestion()
 
-                    val notLearnedList = trainer.dictionary.filter { it.correctAnswerCount < CRITERION_OF_STUDY }
 
                     if (question == null) {
                         println("Вы выучили все слова, поздравляем")
                         continue
                     }
 
-                    val needToAddInVariantsAnswer = NUMBER_VARIANTS_IN_ANSWERS - notLearnedList.size
-                    val learnedList = trainer.dictionary.filter { it.correctAnswerCount >= CRITERION_OF_STUDY }
-                    val questionWord = if (needToAddInVariantsAnswer > 0) {
-                        (notLearnedList + learnedList.shuffled().take(needToAddInVariantsAnswer).shuffled())
-                    } else {
-                        notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS)
-                    }
-
-                    val correctAnswer = notLearnedList.random()
-
-                    val options = questionWord.map { it.translate }.shuffled()
-                    println("Как переводится: ${correctAnswer.original} ?")
-                    options.forEachIndexed { index, option -> println("${index + 1}. $option") }
+                    println("Как переводится: ${question.correctionAnswer.original} ?")
+                    question.variants.forEachIndexed { index, option -> println("${index + 1}. $option") }
 
                     println("Введите номер ответа: ")
                     val answer = readLine()?.toInt()
 
-                    if (answer != null && answer in 1..options.size) {
-                        if (options[answer - 1] == correctAnswer.translate) {
-                            println("Правильно.\nОтвет: ${options[answer - 1]}")
+                    if (answer != null && answer in 1..question.variants.size) {
+                        if (question.variants[answer - 1].toString() == question.correctionAnswer.translate) {
+                            println("Правильно.\nОтвет: ${question.variants[answer - 1]}")
                         } else {
-                            println("Неверно.\nПравильный ответ: ${correctAnswer.translate}")
+                            println("Неверно.\nПравильный ответ: ${question.correctionAnswer.translate}")
                         }
                     } else {
                         println("Некорректный ввод")

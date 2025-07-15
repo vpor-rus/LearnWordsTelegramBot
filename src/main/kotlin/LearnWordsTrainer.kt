@@ -1,4 +1,6 @@
 import java.io.File
+import kotlin.compareTo
+import kotlin.plus
 
 data class Statistics(
     val total: Int,
@@ -48,7 +50,22 @@ class LearnWordsTrainer {
     }
 
     fun getNextQuestion(): Question?{
+        val notLearnedList = dictionary.filter { it.correctAnswerCount < CRITERION_OF_STUDY }
+        if (notLearnedList.isEmpty()) return null
 
-        return Question()
+        val needToAddInVariantsAnswer = NUMBER_VARIANTS_IN_ANSWERS - notLearnedList.size
+        val learnedList = dictionary.filter { it.correctAnswerCount >= CRITERION_OF_STUDY }
+        val questionWord = if (needToAddInVariantsAnswer > 0) {
+            (notLearnedList + learnedList.shuffled().take(needToAddInVariantsAnswer).shuffled())
+        } else {
+            notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS)
+        }
+
+        val correctAnswer = notLearnedList.random()
+        val options = questionWord.map { it.translate }.shuffled()
+        return Question(
+            variants = options,
+            correctionAnswer = correctAnswer,
+        )
     }
 }
