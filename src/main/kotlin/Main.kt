@@ -54,6 +54,7 @@ fun main() {
 
         when (choice) {
             1 -> {
+                while (true) {
                 val notLearnedList = dictionary.filter { it.correctAnswerCount < CRITERION_OF_STUDY }
 
                 if (notLearnedList.isEmpty()) {
@@ -61,7 +62,6 @@ fun main() {
                     continue
                 }
 
-                while (true) {
                     val needToAddInVariantsAnswer = NUMBER_VARIANTS_IN_ANSWERS - notLearnedList.size
                     val learnedList = dictionary.filter { it.correctAnswerCount >= CRITERION_OF_STUDY }
 
@@ -75,9 +75,9 @@ fun main() {
                     val options = questionWord.map { it.translate }.shuffled()
                     val correctAnswerID = options.indexOf(correctAnswer.translate) + 1
 
-                    println("Как переводится: ${correctAnswer.original} ?")
-                    options.forEachIndexed { index, option -> println("${index + 1}. $option") }
-                    println("\n0 - меню\n")
+                    println("Как переводится: ${correctAnswer.original} ?\n" +
+                            "1 - ${options[0]}, 2 - ${options[1]}, 3 - ${options[2]}, 4 - ${options[3]}\n" +
+                            "0 - Выход.")
 
                     println("Введите номер ответа: ")
                     val answer = readLine()?.toInt()

@@ -1,14 +1,14 @@
 share|делится|0
 push|опубликовать|0
-flow|поток|0
-update|обновить|0
-create|создать|0
+flow|поток|1
+update|обновить|1
+create|создать|1
 request|запрос|0
 compare|сравнивать|0
 pull|достать, вытянуть|0
 approve|одобрять|0
-merge|слияние|0
-example|пример|0
+merge|слияние|1
+example|пример|1
 notes|заметка|0
 get|получать|0
 set|устанавливать|0
