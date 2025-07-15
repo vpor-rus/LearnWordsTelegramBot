@@ -1,7 +1,4 @@
-import java.io.File
-/**
- * тайминг 07-00
- * **/
+
 data class Word(
     val original: String,
     val translate: String,
@@ -26,38 +23,43 @@ fun main() {
 
         when (choice) {
             1 -> {
-                val notLearnedList = trainer.dictionary.filter { it.correctAnswerCount < CRITERION_OF_STUDY }
+                while (true) {
 
-                if (notLearnedList.isEmpty()) {
-                    println("Вы выучили все слова, поздравляем")
-                    continue
-                }
+                    val question = trainer.getNextQuestion()
 
-                val needToAddInVariantsAnswer = NUMBER_VARIANTS_IN_ANSWERS - notLearnedList.size
-                val learnedList = trainer.dictionary.filter { it.correctAnswerCount >= CRITERION_OF_STUDY }
-                val questionWord = if (needToAddInVariantsAnswer > 0) {
-                    (notLearnedList + learnedList.shuffled().take(needToAddInVariantsAnswer).shuffled())
-                } else {
-                    notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS)
-                }
+                    val notLearnedList = trainer.dictionary.filter { it.correctAnswerCount < CRITERION_OF_STUDY }
 
-                val correctAnswer = notLearnedList.random()
-
-                val options = questionWord.map { it.translate }.shuffled()
-                println("Как переводится: ${correctAnswer.original} ?")
-                options.forEachIndexed { index, option -> println("${index + 1}. $option") }
-
-                println("Введите номер ответа: ")
-                val answer = readLine()?.toInt()
-
-                if (answer != null && answer in 1..options.size) {
-                    if (options[answer - 1] == correctAnswer.translate) {
-                        println("Правильно.\nОтвет: ${options[answer - 1]}")
-                    } else {
-                        println("Неверно.\nПравильный ответ: ${correctAnswer.translate}")
+                    if (question == null) {
+                        println("Вы выучили все слова, поздравляем")
+                        continue
                     }
-                } else {
-                    println("Некорректный ввод")
+
+                    val needToAddInVariantsAnswer = NUMBER_VARIANTS_IN_ANSWERS - notLearnedList.size
+                    val learnedList = trainer.dictionary.filter { it.correctAnswerCount >= CRITERION_OF_STUDY }
+                    val questionWord = if (needToAddInVariantsAnswer > 0) {
+                        (notLearnedList + learnedList.shuffled().take(needToAddInVariantsAnswer).shuffled())
+                    } else {
+                        notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS)
+                    }
+
+                    val correctAnswer = notLearnedList.random()
+
+                    val options = questionWord.map { it.translate }.shuffled()
+                    println("Как переводится: ${correctAnswer.original} ?")
+                    options.forEachIndexed { index, option -> println("${index + 1}. $option") }
+
+                    println("Введите номер ответа: ")
+                    val answer = readLine()?.toInt()
+
+                    if (answer != null && answer in 1..options.size) {
+                        if (options[answer - 1] == correctAnswer.translate) {
+                            println("Правильно.\nОтвет: ${options[answer - 1]}")
+                        } else {
+                            println("Неверно.\nПравильный ответ: ${correctAnswer.translate}")
+                        }
+                    } else {
+                        println("Некорректный ввод")
+                    }
                 }
             }
 

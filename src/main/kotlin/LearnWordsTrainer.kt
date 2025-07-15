@@ -6,6 +6,11 @@ data class Statistics(
     val percent: Int,
 )
 
+data class Question(
+    val variants: List<Word>,
+    val correctionAnswer: Word,
+)
+
 class LearnWordsTrainer {
 
     val dictionary = loadDictionary()
@@ -40,5 +45,10 @@ class LearnWordsTrainer {
         return Statistics(
            total, learned, percent,
         )
+    }
+
+    fun getNextQuestion(): Question?{
+
+        return Question()
     }
 }
