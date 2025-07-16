@@ -64,12 +64,12 @@ fun main() {
 
 
                     val questionWord =
-                        notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS)
+                        (notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS)).shuffled()
                     val correctAnswer = questionWord.random()
 
                     println("Как переводится: ${correctAnswer.original} ?\n" +
-                            "1 - ${questionWord[0]}, 2 - ${questionWord[1]}, " +
-                            "3 - ${questionWord[2]}, 4 - ${questionWord[3]}\n" +
+                            "1 - ${questionWord[0].translate}, 2 - ${questionWord[1].translate}, " +
+                            "3 - ${questionWord[2].translate}, 4 - ${questionWord[3].translate}\n" +
                             "0 - Выход.")
 
                     println("Введите номер ответа: ")
@@ -77,7 +77,7 @@ fun main() {
 
                     if (answer != null && answer in 1..NUMBER_VARIANTS_IN_ANSWERS) {
                         if (questionWord[answer - 1] == correctAnswer) {
-                            println("Правильно.\nОтвет: ${questionWord[answer - 1]}")
+                            println("Правильно.\nОтвет: ${questionWord[answer - 1].translate}")
 
                             val indexInDict = dictionary.indexOfFirst { it.original == correctAnswer.original }
                             if (indexInDict != -1) {
