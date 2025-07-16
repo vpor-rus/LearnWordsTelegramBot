@@ -74,13 +74,9 @@ fun main() {
             }
 
             2 -> {
-                val totalCount = trainer.dictionary.size
-                val learnedCount = trainer.dictionary.count { it.correctAnswerCount >= CRITERION_OF_STUDY }
-                val percentCount = if (totalCount != 0) {
-                    (learnedCount * 100) / totalCount
-                } else 0
+               val statistics = trainer.getStatistics()
 
-                println("результат изучения: $learnedCount/$totalCount $percentCount%")
+                println("результат изучения: ${statistics.learnedCount}/${statistics.totalCount} ${statistics.percentCount}%")
             }
 
             0 -> {
