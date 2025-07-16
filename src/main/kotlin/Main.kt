@@ -59,46 +59,40 @@ fun main() {
 
                     if (notLearnedList.isEmpty()) {
                         println("Вы выучили все слова, поздравляем")
-                        continue
+                        break
                     }
 
+                    val questionWord = notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS).shuffled()
+                    val correctAnswerWord = questionWord.random()
 
-                    val questionWord =
-                        notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS)
-                    val correctAnswer = questionWord.random()
-
-                    println("Как переводится: ${correctAnswer.original} ?\n" +
-                            "1 - ${questionWord[0]}, 2 - ${questionWord[1]}, " +
-                            "3 - ${questionWord[2]}, 4 - ${questionWord[3]}\n" +
-                            "0 - Выход.")
+                    println(
+                        "Как переводится: ${correctAnswerWord.original} ?\n" + "1 - ${questionWord[0].translate}, 2 - ${questionWord[1].translate}, " + "3 - ${questionWord[2].translate}, 4 - ${questionWord[3].translate}\n" + "0 - Выход."
+                    )
 
                     println("Введите номер ответа: ")
-                    val answer = readLine()?.toInt()
-
-                    if (answer != null && answer in 1..NUMBER_VARIANTS_IN_ANSWERS) {
-                        if (questionWord[answer - 1] == correctAnswer) {
-                            println("Правильно.\nОтвет: ${questionWord[answer - 1]}")
-
-                            val indexInDict = dictionary.indexOfFirst { it.original == correctAnswer.original }
-                            if (indexInDict != -1) {
-                                dictionary[indexInDict].correctAnswerCount++
-                                saveDictionary(dictionary)
-                            }
-                        } else {
-                            println("Неверно.\nПравильный ответ: ${correctAnswer.translate}")
-                        }
-                    } else if(answer == 0) {
-                        println("выход в меню")
+                    val userAnswerInput = readLine()?.toIntOrNull()
+                    if (userAnswerInput == null) {
+                        println("Некорректный ввод\nВведите ответы 1 или 2 или 3 или 4 или 0")
                         break
+                    }
+
+                    if (userAnswerInput == 0) break
+                    val correctAnswerIndex = questionWord.indexOf(correctAnswerWord)
+
+                    if (userAnswerInput == correctAnswerIndex + 1) {
+
+                        correctAnswerWord.correctAnswerCount++
+                        saveDictionary(dictionary)
+                        println("Правильно!\nответ ${questionWord[correctAnswerIndex}")
                     } else {
-                        println("Некорректный ввод")
+                        println("Неправильно!\nПравильный ответ ${questionWord[correctAnswerIndex]}")
                     }
                 }
             }
 
             2 -> {
-                val totalCount = dictionary.size
                 val learnedCount = dictionary.count { it.correctAnswerCount >= CRITERION_OF_STUDY }
+                val totalCount = dictionary.size
                 val percentCount = if (totalCount != 0) {
                     (learnedCount * 100) / totalCount
                 } else 0
