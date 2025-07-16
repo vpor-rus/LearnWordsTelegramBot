@@ -8,33 +8,7 @@ data class Word(
     var correctAnswerCount: Int = 0,
 )
 
-fun loadDictionary(): MutableList<Word> {
 
-    val fileWord = File("word.txt")
-    val lines = fileWord.readLines()
-
-    val dictionary = mutableListOf<Word>()
-
-    for (line in lines) {
-        val separateCell = line.split("|")
-        val original = separateCell.getOrNull(0) ?: ""
-        val translate = separateCell.getOrNull(1) ?: ""
-        val correctAnswerCount = separateCell.getOrNull(2)?.toIntOrNull() ?: 0
-
-        val word = Word(
-            original = original, translate = translate, correctAnswerCount = correctAnswerCount
-        )
-        dictionary.add(word)
-    }
-    return dictionary
-}
-
-fun saveDictionary(dictionary: List<Word>) {
-
-    val fileWord = File("word.txt")
-    val lines = dictionary.map { "${it.original}|${it.translate}|${it.correctAnswerCount}" }
-    fileWord.writeText(lines.joinToString("\n"))
-}
 
 const val CRITERION_OF_STUDY = 3
 
@@ -42,7 +16,7 @@ const val NUMBER_VARIANTS_IN_ANSWERS = 4
 
 fun main() {
 
-    val dictionary = loadDictionary()
+    val trainer = LearnWordsTrainer()
 
     println("Программа предназначена для изучения иностранных слов\n")
 
@@ -55,13 +29,12 @@ fun main() {
         when (choice) {
             1 -> {
                 while (true) {
-                    val notLearnedList = dictionary.filter { it.correctAnswerCount < CRITERION_OF_STUDY }
+                    val notLearnedList = trainer.dictionary.filter { it.correctAnswerCount < CRITERION_OF_STUDY }
 
                     if (notLearnedList.isEmpty()) {
                         println("Вы выучили все слова, поздравляем")
                         continue
                     }
-
 
                     val questionWord =
                         (notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS)).shuffled()
@@ -79,10 +52,10 @@ fun main() {
                         if (questionWord[answer - 1] == correctAnswer) {
                             println("Правильно.\nОтвет: ${questionWord[answer - 1].translate}")
 
-                            val indexInDict = dictionary.indexOfFirst { it.original == correctAnswer.original }
+                            val indexInDict = trainer.dictionary.indexOfFirst { it.original == correctAnswer.original }
                             if (indexInDict != -1) {
-                                dictionary[indexInDict].correctAnswerCount++
-                                saveDictionary(dictionary)
+                                trainer.dictionary[indexInDict].correctAnswerCount++
+                                trainer.saveDictionary(trainer.dictionary)
                             }
                         } else {
                             println("Неверно.\nПравильный ответ: ${correctAnswer.translate}")
@@ -97,11 +70,7 @@ fun main() {
             }
 
             2 -> {
-                val totalCount = dictionary.size
-                val learnedCount = dictionary.count { it.correctAnswerCount >= CRITERION_OF_STUDY }
-                val percentCount = if (totalCount != 0) {
-                    (learnedCount * 100) / totalCount
-                } else 0
+                val stetistics = trainer.getStatistics()
 
                 println("результат изучения: $learnedCount/$totalCount $percentCount%")
             }
