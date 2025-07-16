@@ -62,29 +62,22 @@ fun main() {
                     continue
                 }
 
-                    val needToAddInVariantsAnswer = NUMBER_VARIANTS_IN_ANSWERS - notLearnedList.size
-                    val learnedList = dictionary.filter { it.correctAnswerCount >= CRITERION_OF_STUDY }
 
-
-                    val questionWord = if (needToAddInVariantsAnswer > 0) {
-                        (notLearnedList + learnedList.shuffled().take(needToAddInVariantsAnswer).shuffled())
-                    } else {
+                    val questionWord =
                         notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS)
-                    }
                     val correctAnswer = questionWord.random()
-                    val options = questionWord.map { it.translate }.shuffled()
-                    val correctAnswerID = options.indexOf(correctAnswer.translate) + 1
 
                     println("Как переводится: ${correctAnswer.original} ?\n" +
-                            "1 - ${options[0]}, 2 - ${options[1]}, 3 - ${options[2]}, 4 - ${options[3]}\n" +
+                            "1 - ${correctAnswer[0]}, 2 - ${correctAnswer[1]}, " +
+                            "3 - ${correctAnswer[2]}, 4 - ${correctAnswer[3]}\n" +
                             "0 - Выход.")
 
                     println("Введите номер ответа: ")
                     val answer = readLine()?.toInt()
 
-                    if (answer != null && answer in 1..options.size) {
-                        if (answer == correctAnswerID) {
-                            println("Правильно.\nОтвет: ${options[answer - 1]}")
+                    if (answer != null && answer in 1..NUMBER_VARIANTS_IN_ANSWERS) {
+                        if (answer - 1 == correctAnswer[questionWord]) {
+                            println("Правильно.\nОтвет: ${correctAnswer[answer - 1]}")
 
                             val indexInDict = dictionary.indexOfFirst { it.original == correctAnswer.original }
                             if (indexInDict != -1) {
