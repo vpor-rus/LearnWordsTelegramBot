@@ -8,9 +8,9 @@ data class Word(
     var correctAnswerCount: Int = 0,
 )
 
-fun questionToString(question: Question): String{
-    val variants = question.variants.mapIndexed { index: Int, word: Word -> "${index + 1} - ${word.translate}"  }.joinToString("\n")
-    return question.correctAnswer.original + "\n" + variants + "\n\n0 - выйти в меню"
+fun Question.questionToString(question: Question): String{
+    val variants = this.variants.mapIndexed { index: Int, word: Word -> "${index + 1} - ${word.translate}"  }.joinToString("\n")
+    return this.correctAnswer.original + "\n" + variants + "\n\n0 - выйти в меню"
 }
 
 const val CRITERION_OF_STUDY = 3
