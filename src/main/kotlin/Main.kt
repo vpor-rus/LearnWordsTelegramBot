@@ -48,9 +48,9 @@ fun main() {
 
                     if (trainer.checkAnswer(userAnswerInput?.minus(1))) {
 
-                        println("Правильно!\nОтвет ${question.variants[correctAnswerIndex].translate}")
+                        println("Правильно!")
                     } else {
-                        println("Неправильно!\nПравильный ответ ${question.variants[correctAnswerIndex].translate}")
+                        println("Неправильно!")
                     }
                 }
             }
