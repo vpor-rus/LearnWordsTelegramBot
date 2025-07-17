@@ -1,5 +1,7 @@
 package additional
 
+import java.io.File
+
 data class Word(
     val original: String,
     val translate: String,
@@ -17,6 +19,7 @@ const val NUMBER_VARIANTS_IN_ANSWERS = 4
 
 fun main() {
 
+
     val trainer = LearnWordTrainer()
 
     println("Программа предназначена для изучения иностранных слов\n")
@@ -30,6 +33,7 @@ fun main() {
         when (choice) {
             1 -> {
                 while (true) {
+
                     val question = trainer.getNextQuestion()
 
                     if (question == null) {
@@ -46,7 +50,6 @@ fun main() {
 
                     if (userAnswerInput == 0) break
 
-
                     if (trainer.checkAnswer(userAnswerInput?.minus(1))) {
 
                         println("Правильно!")
@@ -61,6 +64,7 @@ fun main() {
                 val statistics = trainer.getStatistics()
 
                 println("результат изучения: ${statistics.learnedCount}/${statistics.totalCount} ${statistics.percentCount}%")
+
             }
 
             0 -> {
