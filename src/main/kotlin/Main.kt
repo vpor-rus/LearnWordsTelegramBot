@@ -11,10 +11,6 @@ fun Question.asConsoleString(): String{
     return this.correctAnswer.original + "\n" + variants + "\n\n0 - выйти в меню"
 }
 
-const val CRITERION_OF_STUDY = 3
-
-const val NUMBER_VARIANTS_IN_ANSWERS = 4
-
 fun main() {
 
     val trainer = LearnWordTrainer()

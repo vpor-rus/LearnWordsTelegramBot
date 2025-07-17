@@ -13,13 +13,17 @@ data class Question(
     val correctAnswer: Word,
 )
 
+const val CRITERION_OF_STUDY = 3
+
+const val NUMBER_VARIANTS_IN_ANSWERS = 4
+
 class LearnWordTrainer {
 
     private var question: Question? = null
     val dictionary = loadDictionary()
 
 
-    fun loadDictionary(): MutableList<Word> {
+    fun loadDictionary(): List<Word> {
 
         val fileWord = File("word.txt")
         val lines = fileWord.readLines()
