@@ -2,7 +2,7 @@ package additional
 
 import java.io.File
 
-data class Statistics (
+data class Statistics(
     val learnedCount: Int,
     val totalCount: Int,
     val percentCount: Int,
@@ -15,6 +15,7 @@ data class Question(
 
 class LearnWordTrainer {
 
+    private lateinit var question: Question
     val dictionary = loadDictionary()
 
 
@@ -64,9 +65,23 @@ class LearnWordTrainer {
         val questionWord = notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS).shuffled()
         val correctAnswerWord = questionWord.random()
 
-        return Question(
+        question = Question(
             variants = questionWord,
             correctAnswer = correctAnswerWord
         )
+        return question
+    }
+
+    fun checkAnswer(userAnswerIndex: Int?): Boolean {
+
+        val correctAnswerId = question.variants.indexOf(question.correctAnswer)
+
+        if (correctAnswerId == userAnswerIndex) {
+            question.correctAnswer.correctAnswerCount++
+            saveDictionary(dictionary)
+            return true
+        } else {
+            return false
+        }
     }
 }

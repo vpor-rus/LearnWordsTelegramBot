@@ -42,18 +42,12 @@ fun main() {
 
                     println("Введите номер ответа: ")
                     val userAnswerInput = readLine()?.toIntOrNull()
-                    if (userAnswerInput == null) {
-                        println("Некорректный ввод\nВведите ответы 1 или 2 или 3 или 4 или 0")
-                        break
-                    }
 
                     if (userAnswerInput == 0) break
-                    val correctAnswerIndex = question.variants.indexOf(question.correctAnswer)
 
-                    if (userAnswerInput == correctAnswerIndex + 1) {
 
-                        question.correctAnswer.correctAnswerCount++
-                        trainer.saveDictionary(trainer.dictionary)
+                    if (trainer.checkAnswer(userAnswerInput?.minus(1))) {
+
                         println("Правильно!\nОтвет ${question.variants[correctAnswerIndex].translate}")
                     } else {
                         println("Неправильно!\nПравильный ответ ${question.variants[correctAnswerIndex].translate}")
