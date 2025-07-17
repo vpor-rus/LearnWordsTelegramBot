@@ -1,14 +1,12 @@
 package additional
 
-import java.io.File
-
 data class Word(
     val original: String,
     val translate: String,
     var correctAnswerCount: Int = 0,
 )
 
-fun Question.questionToString(question: Question): String{
+fun Question.asConsoleString(): String{
     val variants = this.variants.mapIndexed { index: Int, word: Word -> "${index + 1} - ${word.translate}"  }.joinToString("\n")
     return this.correctAnswer.original + "\n" + variants + "\n\n0 - выйти в меню"
 }
@@ -40,7 +38,7 @@ fun main() {
                     }
                     println("Как переводится слово: ")
                     println(
-                        questionToString(question)
+                        question.asConsoleString()
                     )
 
                     println("Введите номер ответа: ")
