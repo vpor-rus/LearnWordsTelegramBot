@@ -17,7 +17,7 @@ remains|остаток|0
 additional|дополнительный|0
 commit|совершать|0
 shuffle|перемешивание|0
-option|вариант|1
+option|вариант|0
 generic|обобщение|0
 prohibite|запрещать|0
 item|элемент|0
