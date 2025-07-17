@@ -8,6 +8,11 @@ data class Word(
     var correctAnswerCount: Int = 0,
 )
 
+fun questionToString(question: Question): String{
+    val variants = question.variants.mapIndexed { index: Int, word: Word -> "${index + 1} - ${word.translate}"  }.joinToString("\n")
+    return question.correctAnswer.original + "\n" + variants + "\n\n0 - выйти в меню"
+}
+
 const val CRITERION_OF_STUDY = 3
 
 const val NUMBER_VARIANTS_IN_ANSWERS = 4
@@ -33,11 +38,9 @@ fun main() {
                         println("Вы выучили все слова, поздравляем")
                         break
                     }
-
+                    println("Как переводится слово: ")
                     println(
-                        "Как переводится: ${question.correctAnswer.original}?\n" + "1 - ${question.variants[0].translate}, " +
-                                "2 - ${question.variants[1].translate}, " + "3 - ${question.variants[2].translate}, " +
-                                "4 - ${question.variants[3].translate}\n" + "0 - Выход."
+                        questionToString(question)
                     )
 
                     println("Введите номер ответа: ")
