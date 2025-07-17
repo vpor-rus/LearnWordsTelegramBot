@@ -2,6 +2,12 @@ package additional
 
 import java.io.File
 
+class Statistics (
+    val learnedCount: Int,
+    val totalCount: Int,
+    val percentCount: Int,
+)
+
 class LearnWordTrainer {
 
     val dictionary = loadDictionary()
@@ -33,5 +39,17 @@ class LearnWordTrainer {
         val fileWord = File("word.txt")
         val lines = dictionary.map { "${it.original}|${it.translate}|${it.correctAnswerCount}" }
         fileWord.writeText(lines.joinToString("\n"))
+    }
+
+    fun getStatistics(): Statistics {
+        val learnedCount = dictionary.count { it.correctAnswerCount >= CRITERION_OF_STUDY }
+        val totalCount = dictionary.size
+        val percentCount = if (totalCount != 0) {
+            (learnedCount * 100) / totalCount
+        } else 0
+
+        return Statistics(
+            learnedCount, totalCount, percentCount
+        )
     }
 }
