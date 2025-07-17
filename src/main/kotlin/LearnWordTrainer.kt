@@ -2,7 +2,7 @@ package additional
 
 import java.io.File
 
-class Statistics (
+data class Statistics (
     val learnedCount: Int,
     val totalCount: Int,
     val percentCount: Int,
