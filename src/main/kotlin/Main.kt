@@ -27,18 +27,17 @@ fun main() {
         when (choice) {
             1 -> {
                 while (true) {
-                    val notLearnedList = trainer.dictionary.filter { it.correctAnswerCount < CRITERION_OF_STUDY }
+                    val question = trainer.getNextQuestion()
 
-                    if (notLearnedList.isEmpty()) {
+                    if (question == null) {
                         println("Вы выучили все слова, поздравляем")
                         break
                     }
 
-                    val questionWord = notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS).shuffled()
-                    val correctAnswerWord = questionWord.random()
-
                     println(
-                        "Как переводится: ${correctAnswerWord.original} ?\n" + "1 - ${questionWord[0].translate}, 2 - ${questionWord[1].translate}, " + "3 - ${questionWord[2].translate}, 4 - ${questionWord[3].translate}\n" + "0 - Выход."
+                        "Как переводится: ${question.correctAnswer.original}?\n" + "1 - ${question.variants[0].translate}, " +
+                                "2 - ${question.variants[1].translate}, " + "3 - ${question.variants[2].translate}, " +
+                                "4 - ${question.variants[3].translate}\n" + "0 - Выход."
                     )
 
                     println("Введите номер ответа: ")
@@ -49,15 +48,15 @@ fun main() {
                     }
 
                     if (userAnswerInput == 0) break
-                    val correctAnswerIndex = questionWord.indexOf(correctAnswerWord)
+                    val correctAnswerIndex = question.variants.indexOf(question.correctAnswer)
 
                     if (userAnswerInput == correctAnswerIndex + 1) {
 
-                        correctAnswerWord.correctAnswerCount++
+                        question.correctAnswer.correctAnswerCount++
                         trainer.saveDictionary(trainer.dictionary)
-                        println("Правильно!\nОтвет ${questionWord[correctAnswerIndex].translate}")
+                        println("Правильно!\nОтвет ${question.variants[correctAnswerIndex].translate}")
                     } else {
-                        println("Неправильно!\nПравильный ответ ${questionWord[correctAnswerIndex].translate}")
+                        println("Неправильно!\nПравильный ответ ${question.variants[correctAnswerIndex].translate}")
                     }
                 }
             }
