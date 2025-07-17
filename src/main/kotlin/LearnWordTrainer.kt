@@ -15,7 +15,7 @@ data class Question(
 
 class LearnWordTrainer {
 
-    private lateinit var question: Question
+    private var question: Question? = null
     val dictionary = loadDictionary()
 
 
@@ -74,14 +74,16 @@ class LearnWordTrainer {
 
     fun checkAnswer(userAnswerIndex: Int?): Boolean {
 
-        val correctAnswerId = question.variants.indexOf(question.correctAnswer)
+        return question?.let {
+            val correctAnswerId = it.variants.indexOf(it.correctAnswer)
 
-        if (correctAnswerId == userAnswerIndex) {
-            question.correctAnswer.correctAnswerCount++
-            saveDictionary(dictionary)
-            return true
-        } else {
-            return false
-        }
+            if (correctAnswerId == userAnswerIndex) {
+                it.correctAnswer.correctAnswerCount++
+                saveDictionary(dictionary)
+                true
+            } else {
+                false
+            }
+        } ?: false
     }
 }
