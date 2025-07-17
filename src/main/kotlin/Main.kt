@@ -83,9 +83,9 @@ fun main() {
 
                         correctAnswerWord.correctAnswerCount++
                         saveDictionary(dictionary)
-                        println("Правильно!\nответ ${questionWord[correctAnswerIndex}")
+                        println("Правильно!\nОтвет ${questionWord[correctAnswerIndex].translate}")
                     } else {
-                        println("Неправильно!\nПравильный ответ ${questionWord[correctAnswerIndex]}")
+                        println("Неправильно!\nПравильный ответ ${questionWord[correctAnswerIndex].translate}")
                     }
                 }
             }
