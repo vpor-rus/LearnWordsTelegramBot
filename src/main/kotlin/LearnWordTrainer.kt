@@ -13,11 +13,7 @@ data class Question(
     val correctAnswer: Word,
 )
 
-const val CRITERION_OF_STUDY = 3
-
-const val NUMBER_VARIANTS_IN_ANSWERS = 4
-
-class LearnWordTrainer {
+class LearnWordTrainer(private val learnedAnswerCounter: Int = 3, val numberVariants: Int = 4) {
 
     private var question: Question? = null
     val dictionary = loadDictionary()
@@ -52,7 +48,7 @@ class LearnWordTrainer {
     }
 
     fun getStatistics(): Statistics {
-        val learnedCount = dictionary.count { it.correctAnswerCount >= CRITERION_OF_STUDY }
+        val learnedCount = dictionary.count { it.correctAnswerCount >= learnedAnswerCounter }
         val totalCount = dictionary.size
         val percentCount = if (totalCount != 0) {
             (learnedCount * 100) / totalCount
@@ -64,9 +60,9 @@ class LearnWordTrainer {
     }
 
     fun getNextQuestion(): Question? {
-        val notLearnedList = dictionary.filter { it.correctAnswerCount < CRITERION_OF_STUDY }
+        val notLearnedList = dictionary.filter { it.correctAnswerCount < learnedAnswerCounter }
         if (notLearnedList.isEmpty()) return null
-        val questionWord = notLearnedList.shuffled().take(NUMBER_VARIANTS_IN_ANSWERS).shuffled()
+        val questionWord = notLearnedList.shuffled().take(numberVariants).shuffled()
         val correctAnswerWord = questionWord.random()
 
         question = Question(
