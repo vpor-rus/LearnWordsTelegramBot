@@ -20,24 +20,28 @@ class LearnWordTrainer(private val learnedAnswerCounter: Int = 3, val numberVari
 
 
     fun loadDictionary(): List<Word> {
+        try {
 
-        val fileWord = File("word.txt")
-        val lines = fileWord.readLines()
+            val fileWord = File("word.txt")
+            val lines = fileWord.readLines()
 
-        val dictionary = mutableListOf<Word>()
+            val dictionary = mutableListOf<Word>()
 
-        for (line in lines) {
-            val separateCell = line.split("|")
-            val original = separateCell.getOrNull(0) ?: ""
-            val translate = separateCell.getOrNull(1) ?: ""
-            val correctAnswerCount = separateCell.getOrNull(2)?.toIntOrNull() ?: 0
+            for (line in lines) {
+                val separateCell = line.split("|")
+                val original = separateCell.getOrNull(0) ?: ""
+                val translate = separateCell.getOrNull(1) ?: ""
+                val correctAnswerCount = separateCell.getOrNull(2)?.toIntOrNull() ?: 0
 
-            val word = Word(
-                original = original, translate = translate, correctAnswerCount = correctAnswerCount
-            )
-            dictionary.add(word)
+                val word = Word(
+                    original = original, translate = translate, correctAnswerCount = correctAnswerCount
+                )
+                dictionary.add(word)
+            }
+            return dictionary
+        } catch (e: IndexOutOfBoundsException) {
+            throw IllegalStateException("Некорректный файл")
         }
-        return dictionary
     }
 
     fun saveDictionary(dictionary: List<Word>) {
@@ -62,12 +66,17 @@ class LearnWordTrainer(private val learnedAnswerCounter: Int = 3, val numberVari
     fun getNextQuestion(): Question? {
         val notLearnedList = dictionary.filter { it.correctAnswerCount < learnedAnswerCounter }
         if (notLearnedList.isEmpty()) return null
-        val questionWord = notLearnedList.shuffled().take(numberVariants).shuffled()
+        val questionWord = if (notLearnedList.size < numberVariants) {
+            val learnedList = dictionary.filter { it.correctAnswerCount >= learnedAnswerCounter }.shuffled()
+            notLearnedList.shuffled() + learnedList.take(numberVariants - notLearnedList.size)
+        } else {
+            notLearnedList.shuffled().take(numberVariants)
+        }.shuffled()
+
         val correctAnswerWord = questionWord.random()
 
         question = Question(
-            variants = questionWord,
-            correctAnswer = correctAnswerWord
+            variants = questionWord, correctAnswer = correctAnswerWord
         )
         return question
     }

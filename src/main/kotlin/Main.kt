@@ -13,7 +13,11 @@ fun Question.asConsoleString(): String {
 }
 
 fun main() {
-    val trainer = LearnWordTrainer()
+    val trainer = try { LearnWordTrainer()
+    } catch (e: Exception) {
+        println ("Невозможно загрузить словарь")
+        return
+    }
 
     println("Программа предназначена для изучения иностранных слов\n")
 
@@ -21,7 +25,11 @@ fun main() {
         println(
             "выберите ваше действие\n" + "1 - Учить слова\n2 - статистика\n0 - выход"
         )
-        val choice = readLine()?.toInt()
+        val choice = readLine()?.toIntOrNull()
+        if( choice == null ) {
+            println("Некорректный ввод\nВведите 1 или 2 или 0 ")
+            continue
+        }
 
         when (choice) {
             1 -> {
