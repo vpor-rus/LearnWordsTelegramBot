@@ -13,7 +13,11 @@ fun Question.asConsoleString(): String {
 }
 
 fun main() {
-    val trainer = LearnWordTrainer()
+    val trainer = try { LearnWordTrainer()
+    } catch (e: Exception) {
+        println ("Невозможно загрузить словарь")
+        return
+    }
 
     println("Программа предназначена для изучения иностранных слов\n")
 
