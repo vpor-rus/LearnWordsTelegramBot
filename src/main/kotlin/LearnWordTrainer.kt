@@ -68,7 +68,7 @@ class LearnWordTrainer(private val learnedAnswerCounter: Int = 3, val numberVari
         if (notLearnedList.isEmpty()) return null
         val questionWord = if (notLearnedList.size < numberVariants) {
             val learnedList = dictionary.filter { it.correctAnswerCount >= learnedAnswerCounter }.shuffled()
-            notLearnedList.shuffled().take(numberVariants) + learnedList.take(numberVariants - notLearnedList.size)
+            notLearnedList.shuffled() + learnedList.take(numberVariants - notLearnedList.size)
         } else {
             notLearnedList.shuffled().take(numberVariants)
         }.shuffled()
