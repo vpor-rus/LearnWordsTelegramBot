@@ -14,6 +14,5 @@ fun main(args: Array<String>) {
 
     val response: HttpResponse<String> = client.send(request, HttpResponse.BodyHandlers.ofString())
 
-
     println(response.body())
 }
