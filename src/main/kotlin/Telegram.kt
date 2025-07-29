@@ -6,14 +6,22 @@ import java.net.http.HttpResponse
 fun main(args: Array<String>) {
 
     val botToken = args[0]
-    //val urlGetMe = "https://api.telegram.org/bot$botToken/getMe"
+    var updateId = 0
+
+    while (true) {
+
+        Thread.sleep(2000)
+        val updates: String = getUpdates(botToken)
+        println(updates)
+    }
+}
+
+fun getUpdates(botToken: Any): String {
+
     val urlGetUpdates = "https://api.telegram.org/bot$botToken/getUpdates"
-
     val client: HttpClient = HttpClient.newBuilder().build()
-
     val request: HttpRequest = HttpRequest.newBuilder().uri(URI.create(urlGetUpdates)).build()
-
     val response: HttpResponse<String> = client.send(request, HttpResponse.BodyHandlers.ofString())
 
-    println(response.body())
+    return response.body()
 }
