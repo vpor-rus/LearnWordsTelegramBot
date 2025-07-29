@@ -12,7 +12,6 @@ fun Question.asConsoleString(): String {
     return this.correctAnswer.original + "\n" + variants + "\n\n0 - выйти в меню"
 }
 
-
 fun main() {
     val trainer = try { LearnWordTrainer()
     } catch (e: Exception) {
