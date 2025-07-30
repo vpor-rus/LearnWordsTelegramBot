@@ -13,7 +13,13 @@ fun main(args: Array<String>) {
         Thread.sleep(2000)
         val updates: String = getUpdates(botToken, updateId)
         println(updates)
-        updateId = lastupdateId
+
+        val startUpdateId = updates.lastIndexOf("update_id")
+        val endUpdateId = updates.lastIndexOf(",\n\"message\"")
+        if (startUpdateId == -1 || endUpdateId == -1) continue
+        val updateIdString = updates.substring(startUpdateId + 11, endUpdateId)
+
+         updateId = updateIdString.toInt() + 1
     }
 }
 
