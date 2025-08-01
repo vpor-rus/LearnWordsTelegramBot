@@ -18,12 +18,14 @@ fun main(args: Array<String>) {
         val endUpdateId = updates.lastIndexOf(",\n\"message\"")
         if (startUpdateId == -1 || endUpdateId == -1) continue
         val updateIdString = updates.substring(startUpdateId + 11, endUpdateId)
-
          updateId = updateIdString.toInt() + 1
+
+        val messageTextRegex: Regex = "\"text\":\"(.+?)\"".toRegex()
+        val matchResult
     }
 }
 
-fun getUpdates(botToken: Any, updateId: Int): String {
+fun getUpdates(botToken: String, updateId: Int): String {
 
     val urlGetUpdates = "https://api.telegram.org/bot$botToken/getUpdates?offset=$updateId"
     val client: HttpClient = HttpClient.newBuilder().build()
