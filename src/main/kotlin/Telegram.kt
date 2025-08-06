@@ -6,7 +6,7 @@ import java.net.http.HttpResponse
 
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
-        println("Please provide bot token as the first argument")
+        println("Not found connection")
         return
     }
     val botToken = args[0]
