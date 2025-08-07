@@ -6,18 +6,20 @@ import java.net.http.HttpResponse
 
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
-        println("Not found connection")
+        println("Not found token")
         return
     }
+
     val botToken = args[0]
     val botService = TelegramBotService(botToken)
 
     while (true) {
-
-        Thread.sleep(2000)
+        Thread.sleep(TIME_SLEEP)
         botService.processUpdates()
     }
 }
+
+const val TIME_SLEEP: Long = 2000
 
 class TelegramBotService(private val botToken: String) {
 
@@ -27,6 +29,7 @@ class TelegramBotService(private val botToken: String) {
     val messageTextRegex: Regex = "\"text\":\"(.+?)\"".toRegex()
     val updateIdRegex = "\"update_id\":(\\d+)".toRegex()
     val chatIdRegex = "\"chat\"\\s*:\\s*\\{[^}]*\"id\"\\s*:\\s*(\\d+)".toRegex()
+
 
     fun getUpdates(): String {
         val url = "https://api.telegram.org/bot$botToken/getUpdates?offset=$updateId"
@@ -46,7 +49,6 @@ class TelegramBotService(private val botToken: String) {
         println("Updates: $updates")
 
         val updateIds = updateIdRegex.findAll(updates).map { it.groupValues[1].toInt() }.toList()
-
         if (updateIds.isNotEmpty()) {
             updateId = updateIds.maxOrNull()!! + 1
         }
@@ -54,12 +56,24 @@ class TelegramBotService(private val botToken: String) {
         val texts = messageTextRegex.findAll(updates).map { it.groupValues[1] }.toList()
         val chatIds = chatIdRegex.findAll(updates).map { it.groupValues[1].toLong() }.toList()
 
-        for ((chatId, text) in chatIds.zip(texts)) {
-            println("Received message '$text' from chat $chatId")
-
-            if (text == "Hello") {
-                sendMessage(chatId, "Hello")
+        for ((index, updateId) in updateIds.withIndex()) {
+            val chatId = chatIds.getOrNull(index)
+            val text = texts.getOrNull(index)
+            if (chatId != null && text != null) {
+                handleUpdate(chatId, text, updateId)
             }
+        }
+    }
+
+    fun handleUpdate(chatId: Long, text: String, updateId: Int) {
+        println("Received message '$text' from chat $chatId with updateId $updateId")
+
+        if (text == "Hello") {
+            sendMessage(chatId, "Hello")
+        }
+
+        if (updateId >= this.updateId) {
+            this.updateId = updateId + 1
         }
     }
 }
