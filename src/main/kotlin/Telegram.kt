@@ -76,6 +76,15 @@ class TelegramBotService(private val botToken: String) {
         val request = HttpRequest.newBuilder().uri(URI.create(url)).build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
     }
+
+    fun sendMenu(chatId: Long,) {
+        val url = "https://api.telegram.org/bot$botToken/sendMessage"
+        val sendMenuBody = """
+            
+        """.trimIndent()
+        val request = HttpRequest.newBuilder().uri(URI.create(url)).build()
+        client.send(request, HttpResponse.BodyHandlers.ofString())
+    }
 }
 
 fun String.encodeUrl(): String = java.net.URLEncoder.encode(this, Charsets.UTF_8.name())
