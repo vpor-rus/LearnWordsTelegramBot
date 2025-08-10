@@ -62,12 +62,16 @@ class TelegramBotService(private val botToken: String) {
     fun handleUpdate(chatId: Long, text: String, updateId: Int) {
         println("Received message '$text' from chat $chatId with updateId $updateId")
 
-        if (text == "Hello") {
-            sendMessage(chatId, "Hello")
-        }
-
         if (updateId >= this.lastUpdateId) {
             this.lastUpdateId = updateId + 1
+        }
+
+        if (text == "hello") {
+            sendMessage(chatId, "hello")
+        }
+
+        if (text == "menu") {
+            sendMenu(chatId)
         }
     }
 
@@ -80,9 +84,30 @@ class TelegramBotService(private val botToken: String) {
     fun sendMenu(chatId: Long,) {
         val url = "https://api.telegram.org/bot$botToken/sendMessage"
         val sendMenuBody = """
-            
+            {
+              "chat_id": "$chatId",
+              "text": "Основное меню",
+              "reply_markup": {
+                "inline_keyboard": [
+                  [
+                    {
+                      "text": "Изучить слова",
+                      "callback_data": "data1",
+                    }
+                    {
+                      "text": "Статистика",
+                      "callback_data": "data2"
+                    }
+                  ]
+                ]
+              }
+            }
+
         """.trimIndent()
-        val request = HttpRequest.newBuilder().uri(URI.create(url)).build()
+        val request = HttpRequest.newBuilder().uri(URI.create(url)).
+        header("Content-type", "application/json").
+        POST(HttpRequest.BodyPublishers.ofString(sendMenuBody))
+        build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
     }
 }
