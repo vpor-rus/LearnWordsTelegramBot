@@ -81,7 +81,7 @@ class TelegramBotService(private val botToken: String) {
         client.send(request, HttpResponse.BodyHandlers.ofString())
     }
 
-    fun sendMenu(chatId: Long,) {
+    fun sendMenu(chatId: Long) {
         val url = "https://api.telegram.org/bot$botToken/sendMessage"
         val sendMenuBody = """
             {
@@ -92,8 +92,8 @@ class TelegramBotService(private val botToken: String) {
                   [
                     {
                       "text": "Изучить слова",
-                      "callback_data": "data1",
-                    }
+                      "callback_data": "data1"
+                    },
                     {
                       "text": "Статистика",
                       "callback_data": "data2"
@@ -102,12 +102,9 @@ class TelegramBotService(private val botToken: String) {
                 ]
               }
             }
-
         """.trimIndent()
-        val request = HttpRequest.newBuilder().uri(URI.create(url)).
-        header("Content-type", "application/json").
-        POST(HttpRequest.BodyPublishers.ofString(sendMenuBody)).
-        build()
+        val request = HttpRequest.newBuilder().uri(URI.create(url)).header("Content-type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(sendMenuBody)).build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
     }
 }
