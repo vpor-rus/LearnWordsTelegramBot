@@ -29,6 +29,7 @@ class TelegramBotService(private val botToken: String) {
     val messageTextRegex: Regex = "\"text\":\"(.+?)\"".toRegex()
     val updateIdRegex = "\"update_id\":(\\d+)".toRegex()
     val chatIdRegex = "\"chat\"\\s*:\\s*\\{[^}]*\"id\"\\s*:\\s*(\\d+)".toRegex()
+    val dataRegex: Regex = "\"data\":\"(.+?)\"".toRegex()
 
 
     fun getUpdates(): String {
@@ -49,17 +50,19 @@ class TelegramBotService(private val botToken: String) {
 
         val texts = messageTextRegex.findAll(updates).map { it.groupValues[1] }.toList()
         val chatIds = chatIdRegex.findAll(updates).map { it.groupValues[1].toLong() }.toList()
+        val dataList = dataRegex.findAll(updates).map { it.groupValues[1] }.toList()
 
         for ((index, updateId) in updateIds.withIndex()) {
             val chatId = chatIds.getOrNull(index)
             val text = texts.getOrNull(index)
+            val callbackData = dataList.getOrNull(index)
             if (chatId != null && text != null) {
-                handleUpdate(chatId, text, updateId)
+                handleUpdate(chatId, text, updateId, callbackData)
             }
         }
     }
 
-    fun handleUpdate(chatId: Long, text: String, updateId: Int) {
+    fun handleUpdate(chatId: Long, text: String, updateId: Int, callbackData: String?) {
         println("Received message '$text' from chat $chatId with updateId $updateId")
 
         if (updateId >= this.lastUpdateId) {
@@ -72,6 +75,14 @@ class TelegramBotService(private val botToken: String) {
 
         if (text == "menu") {
             sendMenu(chatId)
+        }
+
+        if (callbackData != null) {
+            when (callbackData) {
+                "learn_words_clicked" -> sendMessage(chatId, "Вы выбрали изучать слова")
+                "statistic_clicked" -> sendMessage(chatId, "Вы выбрали статистику")
+                else -> sendMessage(chatId, "Неизвестная команда: $callbackData")
+            }
         }
     }
 
@@ -92,11 +103,11 @@ class TelegramBotService(private val botToken: String) {
                   [
                     {
                       "text": "Изучить слова",
-                      "callback_data": "data1"
+                      "callback_data": "learn_words_clicked"
                     },
                     {
                       "text": "Статистика",
-                      "callback_data": "data2"
+                      "callback_data": "statistic_clicked"
                     }
                   ]
                 ]
