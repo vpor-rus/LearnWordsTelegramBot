@@ -24,7 +24,7 @@ const val TIME_SLEEP: Long = 2000
 class TelegramBotService(private val botToken: String) {
 
     private val client = HttpClient.newBuilder().build()
-    private var updateId = 0
+    private var lastUpdateId = 0
 
     val messageTextRegex: Regex = "\"text\":\"(.+?)\"".toRegex()
     val updateIdRegex = "\"update_id\":(\\d+)".toRegex()
@@ -32,16 +32,10 @@ class TelegramBotService(private val botToken: String) {
 
 
     fun getUpdates(): String {
-        val url = "https://api.telegram.org/bot$botToken/getUpdates?offset=$updateId"
+        val url = "https://api.telegram.org/bot$botToken/getUpdates?offset=$lastUpdateId"
         val request = HttpRequest.newBuilder().uri(URI.create(url)).build()
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
         return response.body()
-    }
-
-    fun sendMessage(chatId: Long, text: String) {
-        val url = "https://api.telegram.org/bot$botToken/sendMessage?chat_id=$chatId&text=${text.encodeUrl()}"
-        val request = HttpRequest.newBuilder().uri(URI.create(url)).build()
-        client.send(request, HttpResponse.BodyHandlers.ofString())
     }
 
     fun processUpdates() {
@@ -50,7 +44,7 @@ class TelegramBotService(private val botToken: String) {
 
         val updateIds = updateIdRegex.findAll(updates).map { it.groupValues[1].toInt() }.toList()
         if (updateIds.isNotEmpty()) {
-            updateId = updateIds.maxOrNull()!! + 1
+            lastUpdateId = updateIds.maxOrNull()!! + 1
         }
 
         val texts = messageTextRegex.findAll(updates).map { it.groupValues[1] }.toList()
@@ -72,9 +66,15 @@ class TelegramBotService(private val botToken: String) {
             sendMessage(chatId, "Hello")
         }
 
-        if (updateId >= this.updateId) {
-            this.updateId = updateId + 1
+        if (updateId >= this.lastUpdateId) {
+            this.lastUpdateId = updateId + 1
         }
+    }
+
+    fun sendMessage(chatId: Long, text: String) {
+        val url = "https://api.telegram.org/bot$botToken/sendMessage?chat_id=$chatId&text=${text.encodeUrl()}"
+        val request = HttpRequest.newBuilder().uri(URI.create(url)).build()
+        client.send(request, HttpResponse.BodyHandlers.ofString())
     }
 }
 
