@@ -24,7 +24,8 @@ const val TIME_SLEEP: Long = 2000
 class TelegramBotService(private val botToken: String) {
 
     companion object {
-        const val API = "api.telegram.org"
+        const val BASE_URL = "https://api.telegram.org/bot"
+
         const val CMD_HELLO = "hello"
         const val CMD_MENU = "menu"
 
@@ -42,7 +43,7 @@ class TelegramBotService(private val botToken: String) {
 
 
     fun getUpdates(): String {
-        val url = "https://$API/bot$botToken/getUpdates?offset=$lastUpdateId"
+        val url = "$BASE_URL$botToken/getUpdates?offset=$lastUpdateId"
         val request = HttpRequest.newBuilder().uri(URI.create(url)).build()
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
         return response.body()
@@ -72,14 +73,12 @@ class TelegramBotService(private val botToken: String) {
     }
 
     fun handleUpdate(chatId: Long, text: String, updateId: Int, callbackData: String?) {
-        println("Received message '$text' from chat $chatId with updateId $updateId")
-
         if (updateId >= this.lastUpdateId) {
             this.lastUpdateId = updateId + 1
         }
 
         if (text == CMD_HELLO) {
-            sendMessage(chatId, CMD_HELLO)
+            sendMessage(chatId, "hello")
         }
 
         if (text == CMD_MENU) {
@@ -96,13 +95,13 @@ class TelegramBotService(private val botToken: String) {
     }
 
     fun sendMessage(chatId: Long, text: String) {
-        val url = "https://$API/bot$botToken/sendMessage?chat_id=$chatId&text=${text.encodeUrl()}"
+        val url = "$BASE_URL$botToken/sendMessage?chat_id=$chatId&text=${text.encodeUrl()}"
         val request = HttpRequest.newBuilder().uri(URI.create(url)).build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
     }
 
     fun sendMenu(chatId: Long) {
-        val url = "https://$API/bot$botToken/sendMessage"
+        val url = "$BASE_URL$botToken/sendMessage"
         val sendMenuBody = """
             {
               "chat_id": "$chatId",
