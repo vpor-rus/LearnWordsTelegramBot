@@ -23,6 +23,15 @@ const val TIME_SLEEP: Long = 2000
 
 class TelegramBotService(private val botToken: String) {
 
+    companion object {
+        const val API = "api.telegram.org"
+        const val CMD_HELLO = "hello"
+        const val CMD_MENU = "menu"
+
+        const val CALLBACK_LEARN_WORDS = "learn_words_clicked"
+        const val CALLBACK_STATISTIC = "statistic_clicked"
+    }
+
     private val client = HttpClient.newBuilder().build()
     private var lastUpdateId = 0
 
@@ -33,7 +42,7 @@ class TelegramBotService(private val botToken: String) {
 
 
     fun getUpdates(): String {
-        val url = "https://api.telegram.org/bot$botToken/getUpdates?offset=$lastUpdateId"
+        val url = "https://$API/bot$botToken/getUpdates?offset=$lastUpdateId"
         val request = HttpRequest.newBuilder().uri(URI.create(url)).build()
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
         return response.body()
@@ -69,31 +78,31 @@ class TelegramBotService(private val botToken: String) {
             this.lastUpdateId = updateId + 1
         }
 
-        if (text == "hello") {
-            sendMessage(chatId, "hello")
+        if (text == CMD_HELLO) {
+            sendMessage(chatId, CMD_HELLO)
         }
 
-        if (text == "menu") {
+        if (text == CMD_MENU) {
             sendMenu(chatId)
         }
 
         if (callbackData != null) {
             when (callbackData) {
-                "learn_words_clicked" -> sendMessage(chatId, "Вы выбрали изучать слова")
-                "statistic_clicked" -> sendMessage(chatId, "Вы выбрали статистику")
+                CALLBACK_LEARN_WORDS -> sendMessage(chatId, "Вы выбрали изучать слова")
+                CALLBACK_STATISTIC -> sendMessage(chatId, "Вы выбрали статистику")
                 else -> sendMessage(chatId, "Неизвестная команда: $callbackData")
             }
         }
     }
 
     fun sendMessage(chatId: Long, text: String) {
-        val url = "https://api.telegram.org/bot$botToken/sendMessage?chat_id=$chatId&text=${text.encodeUrl()}"
+        val url = "https://$API/bot$botToken/sendMessage?chat_id=$chatId&text=${text.encodeUrl()}"
         val request = HttpRequest.newBuilder().uri(URI.create(url)).build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
     }
 
     fun sendMenu(chatId: Long) {
-        val url = "https://api.telegram.org/bot$botToken/sendMessage"
+        val url = "https://$API/bot$botToken/sendMessage"
         val sendMenuBody = """
             {
               "chat_id": "$chatId",
