@@ -111,11 +111,11 @@ class TelegramBotService(private val botToken: String) {
                   [
                     {
                       "text": "Изучить слова",
-                      "callback_data": "learn_words_clicked"
+                      "callback_data": $CALLBACK_LEARN_WORDS
                     },
                     {
                       "text": "Статистика",
-                      "callback_data": "statistic_clicked"
+                      "callback_data": $CALLBACK_STATISTIC
                     }
                   ]
                 ]
