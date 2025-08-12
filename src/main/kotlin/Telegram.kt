@@ -1,8 +1,8 @@
+import additional.LearnWordTrainer
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-
 
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
@@ -11,7 +11,8 @@ fun main(args: Array<String>) {
     }
 
     val botToken = args[0]
-    val botService = TelegramBotService(botToken)
+    val trainer = LearnWordTrainer()
+    val botService = TelegramBotService(botToken, trainer)
 
     while (true) {
         Thread.sleep(TIME_SLEEP)
@@ -21,7 +22,7 @@ fun main(args: Array<String>) {
 
 const val TIME_SLEEP: Long = 2000
 
-class TelegramBotService(private val botToken: String) {
+class TelegramBotService(private val botToken: String, private val trainer: LearnWordTrainer) {
 
     companion object {
         const val BASE_URL = "https://api.telegram.org/bot"
@@ -85,10 +86,18 @@ class TelegramBotService(private val botToken: String) {
             sendMenu(chatId)
         }
 
+
+
         if (callbackData != null) {
             when (callbackData) {
                 CALLBACK_LEARN_WORDS -> sendMessage(chatId, "Вы выбрали изучать слова")
-                CALLBACK_STATISTIC -> sendMessage(chatId, "Вы выбрали статистику")
+                CALLBACK_STATISTIC -> {
+                    trainer.getStatistics()
+                    val message =
+                        "результат изучения: ${trainer.getStatistics().learnedCount}/" + "${trainer.getStatistics().totalCount} ${trainer.getStatistics().percentCount}%"
+                    sendMessage(chatId, message)
+                }
+
                 else -> sendMessage(chatId, "Неизвестная команда: $callbackData")
             }
         }
@@ -111,11 +120,11 @@ class TelegramBotService(private val botToken: String) {
                   [
                     {
                       "text": "Изучить слова",
-                      "callback_data": $CALLBACK_LEARN_WORDS
+                      "callback_data": "$CALLBACK_LEARN_WORDS"
                     },
                     {
                       "text": "Статистика",
-                      "callback_data": $CALLBACK_STATISTIC
+                      "callback_data": "$CALLBACK_STATISTIC"
                     }
                   ]
                 ]
