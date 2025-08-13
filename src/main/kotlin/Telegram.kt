@@ -1,4 +1,5 @@
 import additional.LearnWordTrainer
+import additional.Question
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -26,12 +27,11 @@ class TelegramBotService(private val botToken: String, private val trainer: Lear
 
     companion object {
         const val BASE_URL = "https://api.telegram.org/bot"
-
         const val CMD_HELLO = "hello"
         const val CMD_MENU = "menu"
-
         const val CALLBACK_LEARN_WORDS = "learn_words_clicked"
         const val CALLBACK_STATISTIC = "statistic_clicked"
+        const val CALLBACK_DATA_ANSWER_PREFIX = "answer_"
     }
 
     private val client = HttpClient.newBuilder().build()
@@ -41,7 +41,6 @@ class TelegramBotService(private val botToken: String, private val trainer: Lear
     val updateIdRegex = "\"update_id\":(\\d+)".toRegex()
     val chatIdRegex = "\"chat\"\\s*:\\s*\\{[^}]*\"id\"\\s*:\\s*(\\d+)".toRegex()
     val dataRegex: Regex = "\"data\":\"(.+?)\"".toRegex()
-
 
     fun getUpdates(): String {
         val url = "$BASE_URL$botToken/getUpdates?offset=$lastUpdateId"
@@ -77,25 +76,32 @@ class TelegramBotService(private val botToken: String, private val trainer: Lear
         if (updateId >= this.lastUpdateId) {
             this.lastUpdateId = updateId + 1
         }
-
         if (text == CMD_HELLO) {
             sendMessage(chatId, "hello")
         }
-
         if (text == CMD_MENU) {
             sendMenu(chatId)
         }
-
-
-
         if (callbackData != null) {
-            when (callbackData) {
-                CALLBACK_LEARN_WORDS -> sendMessage(chatId, "Вы выбрали изучать слова")
-                CALLBACK_STATISTIC -> {
-                    trainer.getStatistics()
+            when {
+                callbackData == CALLBACK_LEARN_WORDS -> {
+                    checkNextQuestionAndSend(trainer, this, chatId)
+                }
+
+                callbackData == CALLBACK_STATISTIC -> {
+                    val stats = trainer.getStatistics()
                     val message =
-                        "результат изучения: ${trainer.getStatistics().learnedCount}/" + "${trainer.getStatistics().totalCount} ${trainer.getStatistics().percentCount}%"
+                        "Результат изучения: ${stats.learnedCount}/${stats.totalCount} (${stats.percentCount}%)"
                     sendMessage(chatId, message)
+                }
+
+                callbackData.startsWith(CALLBACK_DATA_ANSWER_PREFIX) -> {
+                    val indexStr = callbackData.removePrefix(CALLBACK_DATA_ANSWER_PREFIX)
+                    val userAnswerIndex = indexStr.toIntOrNull()
+                    val isCorrect = trainer.checkAnswer(userAnswerIndex)
+                    val response = if (isCorrect) "Правильно!" else "Неправильно"
+                    sendMessage(chatId, response)
+                    checkNextQuestionAndSend(trainer, this, chatId)
                 }
 
                 else -> sendMessage(chatId, "Неизвестная команда: $callbackData")
@@ -135,6 +141,46 @@ class TelegramBotService(private val botToken: String, private val trainer: Lear
             .POST(HttpRequest.BodyPublishers.ofString(sendMenuBody)).build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
     }
+
+    fun sendQuestion(chatId: Long, question: Question) {
+        val optionsJson = question.variants.mapIndexed { index, word ->
+            """
+        {
+          "text": "${word.translate}",
+          "callback_data": "${CALLBACK_DATA_ANSWER_PREFIX}$index"
+        }
+        """.trimIndent()
+        }.joinToString(separator = ",")
+
+        val body = """
+        {
+          "chat_id": "$chatId",
+          "text": "${question.correctAnswer.original}",
+          "reply_markup": {
+            "inline_keyboard": [
+              [ $optionsJson ]
+            ]
+          }
+        }
+    """.trimIndent()
+
+        val url = "$BASE_URL$botToken/sendMessage"
+        val request = HttpRequest.newBuilder().uri(URI.create(url)).header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(body)).build()
+        client.send(request, HttpResponse.BodyHandlers.ofString())
+    }
+
+    fun checkNextQuestionAndSend(
+        trainer: LearnWordTrainer, telegramBotService: TelegramBotService, chatId: Long
+    ) {
+        val question = trainer.getNextQuestion()
+        if (question == null) {
+            telegramBotService.sendMessage(chatId, "Все слова в словаре выучены")
+        } else {
+            telegramBotService.sendQuestion(chatId, question)
+        }
+    }
+
 }
 
 fun String.encodeUrl(): String = java.net.URLEncoder.encode(this, Charsets.UTF_8.name())
