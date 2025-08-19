@@ -1,4 +1,4 @@
-package ru
+package ru.vporrus.trainerbot.telegram.api
 
 import additional.LearnWordTrainer
 import java.net.URI
