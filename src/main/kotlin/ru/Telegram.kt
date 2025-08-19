@@ -1,5 +1,8 @@
+package ru
+
 import additional.LearnWordTrainer
 import java.net.URI
+import java.net.URLEncoder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
@@ -137,4 +140,4 @@ class TelegramBotService(private val botToken: String, private val trainer: Lear
     }
 }
 
-fun String.encodeUrl(): String = java.net.URLEncoder.encode(this, Charsets.UTF_8.name())
+fun String.encodeUrl(): String = URLEncoder.encode(this, Charsets.UTF_8.name())
