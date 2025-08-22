@@ -1,21 +1,11 @@
+import ru.vporus.trainerbot.trainer.model.Question
+import ru.vporus.trainerbot.trainer.model.Statistics
 import java.io.File
-
-data class Statistics(
-    val learnedCount: Int,
-    val totalCount: Int,
-    val percentCount: Int,
-)
-
-data class Question(
-    val variants: List<Word>,
-    val correctAnswer: Word,
-)
 
 class LearnWordTrainer(private val learnedAnswerCounter: Int = 3, val numberVariants: Int = 4) {
 
     private var question: Question? = null
     val dictionary = loadDictionary()
-
 
     fun loadDictionary(): List<Word> {
         try {

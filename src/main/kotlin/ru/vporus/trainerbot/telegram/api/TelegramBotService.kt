@@ -1,6 +1,5 @@
 package ru.vporus.trainerbot.telegram.api
 
-
 import Question
 import java.net.URI
 import java.net.URLEncoder
