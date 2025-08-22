@@ -1,7 +1,6 @@
 package ru.vporus.trainerbot.telegram.api
 
-
-import Question
+import ru.vporus.trainerbot.trainer.model.Question
 import java.net.URI
 import java.net.URLEncoder
 import java.net.http.HttpClient

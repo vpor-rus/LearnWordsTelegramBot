@@ -1,3 +1,5 @@
+import ru.vporus.trainerbot.trainer.model.Question
+
 data class Word(
     val original: String,
     val translate: String,
