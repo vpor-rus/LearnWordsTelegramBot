@@ -1,3 +1,6 @@
+package ru.vporus.trainerbot.console
+
+import LearnWordTrainer
 import ru.vporus.trainerbot.trainer.model.Question
 import ru.vporus.trainerbot.trainer.model.Word
 

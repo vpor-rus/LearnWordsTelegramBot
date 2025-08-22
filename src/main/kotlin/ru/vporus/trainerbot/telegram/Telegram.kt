@@ -1,4 +1,6 @@
-import ru.vporus.trainerbot.telegram.TelegramBot
+package ru.vporus.trainerbot.telegram
+
+import LearnWordTrainer
 
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
