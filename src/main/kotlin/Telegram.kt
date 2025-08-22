@@ -1,8 +1,4 @@
-import java.net.URI
-import java.net.URLEncoder
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
+import ru.vporus.trainerbot.trainer.model.TelegramBotService
 
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
@@ -17,8 +13,7 @@ fun main(args: Array<String>) {
 }
 
 class TelegramBot(
-    private val botToken: String,
-    private val trainer: LearnWordTrainer
+    private val botToken: String, private val trainer: LearnWordTrainer
 ) {
     companion object {
         const val TIME_SLEEP: Long = 2000
