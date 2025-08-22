@@ -1,5 +1,6 @@
 package additional
 
+import ru.vporus.trainerbot.trainer.model.Word
 import java.io.File
 
 data class Statistics(

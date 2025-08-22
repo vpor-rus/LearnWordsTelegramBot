@@ -1,10 +1,6 @@
-package additional
-
-data class Word(
-    val original: String,
-    val translate: String,
-    var correctAnswerCount: Int = 0,
-)
+import additional.LearnWordTrainer
+import additional.Question
+import ru.vporus.trainerbot.trainer.model.Word
 
 fun Question.asConsoleString(): String {
     val variants =
@@ -13,7 +9,8 @@ fun Question.asConsoleString(): String {
 }
 
 fun main() {
-    val trainer = try { LearnWordTrainer()
+    val trainer = try {
+        LearnWordTrainer()
     } catch (e: Exception) {
         println ("Невозможно загрузить словарь")
         return
