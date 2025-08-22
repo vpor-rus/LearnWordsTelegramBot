@@ -1,5 +1,3 @@
-package additional
-
 data class Word(
     val original: String,
     val translate: String,
@@ -13,7 +11,8 @@ fun Question.asConsoleString(): String {
 }
 
 fun main() {
-    val trainer = try { LearnWordTrainer()
+    val trainer = try {
+        LearnWordTrainer()
     } catch (e: Exception) {
         println ("Невозможно загрузить словарь")
         return
