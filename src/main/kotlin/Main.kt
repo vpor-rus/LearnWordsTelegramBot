@@ -1,5 +1,4 @@
-import additional.LearnWordTrainer
-import additional.Question
+import ru.vporus.trainerbot.trainer.model.Question
 import ru.vporus.trainerbot.trainer.model.Word
 
 fun Question.asConsoleString(): String {
