@@ -4,7 +4,8 @@ import LearnWordTrainer
 import ru.vporus.trainerbot.telegram.api.TelegramBotService
 
 class TelegramBot(
-    private val botToken: String, private val trainer: LearnWordTrainer
+    private val botToken: String,
+    private val trainer: LearnWordTrainer
 ) {
     companion object {
         const val TIME_SLEEP: Long = 2000

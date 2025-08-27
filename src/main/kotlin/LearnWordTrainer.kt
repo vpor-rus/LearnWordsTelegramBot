@@ -1,5 +1,6 @@
 import ru.vporus.trainerbot.trainer.model.Question
 import ru.vporus.trainerbot.trainer.model.Statistics
+import ru.vporus.trainerbot.trainer.model.Word
 import java.io.File
 
 class LearnWordTrainer(private val learnedAnswerCounter: Int = 3, val numberVariants: Int = 4) {

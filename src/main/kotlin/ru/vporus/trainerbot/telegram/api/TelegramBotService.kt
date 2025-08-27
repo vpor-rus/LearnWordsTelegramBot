@@ -24,7 +24,10 @@ class TelegramBotService(private val botToken: String) {
     private val dataRegex = "\"data\":\"(.+?)\"".toRegex()
 
     data class Update(
-        val updateId: Int, val chatId: Long, val text: String?, val callbackData: String?
+        val updateId: Int,
+        val chatId: Long,
+        val text: String?,
+        val callbackData: String?
     )
 
     fun getUpdates(): List<Update> {
@@ -86,8 +89,11 @@ class TelegramBotService(private val botToken: String) {
         }
         """.trimIndent()
 
-        val request = HttpRequest.newBuilder().uri(URI.create(url)).header("Content-type", "application/json")
-            .POST(HttpRequest.BodyPublishers.ofString(sendMenuBody)).build()
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create(url))
+            .header("Content-type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(sendMenuBody))
+            .build()
 
         client.send(request, HttpResponse.BodyHandlers.ofString())
     }
@@ -115,8 +121,11 @@ class TelegramBotService(private val botToken: String) {
         """.trimIndent()
 
         val url = "$BASE_URL$botToken/sendMessage"
-        val request = HttpRequest.newBuilder().uri(URI.create(url)).header("Content-Type", "application/json")
-            .POST(HttpRequest.BodyPublishers.ofString(body)).build()
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create(url))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(body))
+            .build()
 
         client.send(request, HttpResponse.BodyHandlers.ofString())
     }

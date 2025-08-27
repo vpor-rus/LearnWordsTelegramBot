@@ -1,10 +1,8 @@
-import ru.vporus.trainerbot.trainer.model.Question
+package ru.vporus.trainerbot.console
 
-data class Word(
-    val original: String,
-    val translate: String,
-    var correctAnswerCount: Int = 0,
-)
+import LearnWordTrainer
+import ru.vporus.trainerbot.trainer.model.Question
+import ru.vporus.trainerbot.trainer.model.Word
 
 fun Question.asConsoleString(): String {
     val variants =
